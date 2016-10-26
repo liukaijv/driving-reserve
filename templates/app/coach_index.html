@@ -1,0 +1,124 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% block title %}教练中心{% endblock %}
+{% block body %}
+
+    <div class="pages">
+
+        <div data-page="msg" class="page no-toolbar no-swipeback">
+
+            <div class="page-content infinite-scroll" data-distance="50" data-url="/app/load_reserver_data_coach/">
+
+                <div class="pull-to-refresh-layer">
+                    <div class="preloader"></div>
+                    <div class="pull-to-refresh-arrow"></div>
+                </div>
+
+                <div class="index-top-bg">
+                    <img src="{% static 'images/sample_02.jpg' %}">
+                    <a class="more-ellipsis open-popover link" href="#">
+                        <i class="fa fa-ellipsis-v"></i>
+                        {% if message_count > 0 %}<span class="msg-label">{{ message_count }}</span>{% endif %}
+                    </a>
+                </div>
+
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <img src="{% static 'images/avatar/avatar03.jpg' %}">
+                    </div>
+                    <div class="user-info-body">
+                        <ul>
+                            <li class="subject">
+                                <div class="user-info-name">
+                                    {{ user.name }}
+                                </div>
+                            </li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="content-block-title">
+                    教学记录
+                </div>
+
+                <div class="infinite-block">
+
+                </div>
+
+                <div class="infinite-scroll-preloader">
+                    <div class="preloader"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block extra_page %}
+
+    <div class="popover popover-menu">
+        <div class="popover-angle"></div>
+        <div class="popover-inner">
+            <div class="list-block">
+                <ul>
+                    <li>
+                        <a class="list-button item-link external" href="{% url 'message_list' %}">
+                            {% if message_count > 0 %}
+                                <span class="badge bg-red"
+                                      style="line-height: 1;border-radius: 50%;padding: 2px 5px;">{{ message_count }}</span>
+                            {% endif %}
+                            消息中心
+                        </a>
+                    </li>
+                    <li>
+                        <a class="list-button item-link external" id="logout" href="{% url 'logout' %}">退出</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        {% for item in top_reverse_list %}
+            App.addNotification({
+                title: '预约提醒！',
+                message: '您预约于 {{ item.train_date | date:"Y-m-d"}} ' +
+                '{{ item.train_time_span.start_time | date:"H:s"}}-' +
+                '{{ item.train_time_span.end_time | date:"H:s"}} ' +
+                '在{{ item.user.coach_car.training_place }} ' +
+                '学车，请按时到哦！',
+                additionalClass: 'reverse-notifications',
+                closeIcon: false,
+                onClick: function () {
+                    App.closeNotification('.reverse-notifications');
+                    {#                    App.confirm('是否关闭此预约信息提醒？', function () {#}
+                    {#                        App.closeNotification('.reverse-notifications');#}
+                    {#                    }, function () {#}
+                    {#                    });#}
+                }
+            });
+        {% endfor %}
+        {% if messages %}
+            {% for message in messages %}
+                App.addNotification({
+                    title: '操作提醒！',
+                    message: '{{ message }}',
+                    additionalClass: 'operation-notifications',
+                    closeIcon: false,
+                    onClick: function () {
+                        App.closeNotification('.operation-notifications');
+                    }
+                });
+            {% endfor %}
+        {% endif %}
+    </script>
+{% endblock %}

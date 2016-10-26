@@ -1,0 +1,414 @@
+{% extends "admin/_head.html" %}
+{% load staticfiles %}
+{% block body %}
+    <body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div id="status">&nbsp;</div>
+    </div>
+    <!-- TOP NAVBAR -->
+    <nav role="navigation" class="navbar navbar-static-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" class="navbar-toggle"
+                        type="button">
+                    <span class="entypo-menu"></span>
+                </button>
+                <div id="logo-mobile" class="visible-xs">
+                    <h1>
+                        森安预约
+                        <span>v1.0</span>
+                    </h1>
+                </div>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown" id="msg-notice">
+
+                    </li>
+                    <li>
+                        <a href="#"><i data-toggle="tooltip" data-placement="bottom" title="帮助"
+                                       style="font-size:20px;"
+                                       class="icon-help tooltitle"></i></a>
+                    </li>
+                </ul>
+                <div id="nt-title-container" class="navbar-left running-text visible-lg">
+                    <ul class="date-top">
+                        <li class="entypo-calendar" style="margin-right:5px"></li>
+                        <li id="Date"></li>
+                    </ul>
+                    <ul id="digital-clock" class="digital">
+                        <li class="entypo-clock" style="margin-right:5px"></li>
+                        <li class="hour"></li>
+                        <li>:</li>
+                        <li class="min"></li>
+                        <li>:</li>
+                        <li class="sec"></li>
+                        <li class="meridiem"></li>
+                    </ul>
+                    <ul id="nt-title">
+
+                    </ul>
+                </div>
+                <ul style="margin-right:0;" class="nav navbar-nav navbar-right">
+                    <li>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <img alt="" class="admin-pic img-circle"
+                                 src="{% static 'img/people-q-c-350-250-7.jpg' %}">你好, 管理员 <b
+                                class="caret"></b>
+                        </a>
+                        <ul style="margin-top:14px;" role="menu" class="dropdown-setting dropdown-menu">
+                            <li>
+                                <a href="{% url 'change_pwd_url' %}">
+                                    <span class="entypo-vcard"></span>&#160;&#160;修改密码</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'list_sms_url' %}">
+                                    <span class="entypo-lifebuoy"></span>&#160;&#160;短信接口查询</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="{% url 'logout_url' %}">
+                                    <span class="entypo-logout"></span>&#160;&#160;退出</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="icon-gear"></span>&#160;&#160;换肤</a>
+                        <ul role="menu" class="dropdown-setting dropdown-menu">
+                            <li class="theme-bg">
+                                <div id="button-bg"></div>
+                                <div id="button-bg2"></div>
+                                <div id="button-bg3"></div>
+                                <div id="button-bg5"></div>
+                                <div id="button-bg6"></div>
+                                <div id="button-bg7"></div>
+                                <div id="button-bg8"></div>
+                                <div id="button-bg9"></div>
+                                <div id="button-bg10"></div>
+                                <div id="button-bg11"></div>
+                                <div id="button-bg12"></div>
+                                <div id="button-bg13"></div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <!-- /END OF TOP NAVBAR -->
+    <!-- SIDE MENU -->
+    <div id="skin-select">
+        <div id="logo">
+            <h1>
+                {#                <img src={% static 'img/logo.png' %}" style="width:20px;height:20px;">#}
+                <a href="{% url 'home_url' %}"> 森安预约</a>
+                <span>v1.0</span>
+            </h1>
+        </div>
+        <a id="toggle">
+            <span class="entypo-menu"></span>
+        </a>
+
+        <div class="dark">
+            <form action="#">
+                    <span>
+                        <input type="text" name="search" value="" class="search rounded id_search"
+                               placeholder="搜索 菜单..." autofocus/>
+                    </span>
+            </form>
+        </div>
+        <div class="skin-part">
+            <div id="tree-wrap">
+                <div class="side-bar">
+                    <ul class="topnav menu-left-nest">
+                        <li>
+                            <a href="#" style="border-left:0px solid!important;" class="title-menu-left">
+
+                                <span class="widget-menu">预 约 管 理</span>
+                                <i data-toggle="tooltip" class="entypo-cog pull-right config-wrap"></i>
+
+                            </a>
+                        </li>
+                        <li style="position: relative;">
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_drive_reserve_url' %}" title="预约练车列表">
+                                <i class="entypo-paper-plane"></i>
+                                <span>预约练车列表</span>
+                            </a>
+                            <a href="{% url 'list_drive_reserve_url' %}?audit_status=0" class="noft-red"
+                               style="position: absolute;left:auto; right:10px; top: 10px;padding: 0 5px; line-height: 25px;"
+                               id="navReverseCount"></a>
+                        </li>
+                        <li style="position: relative;">
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_exam_url' %}" title="预约考试列表">
+                                <i class="icon-feed"></i>
+                                <span>预约考试列表</span>
+                            </a>
+                            <a href="{% url 'list_exam_url' %}?audit_status=0" class="noft-red"
+                               style="position: absolute;left:auto; right:10px; top: 10px;padding: 0 5px; line-height: 25px;"
+                               id="navExamCount"></a>
+                        </li>
+
+                    </ul>
+                    <ul class="topnav menu-left-nest">
+                        <li>
+                            <a href="#" style="border-left:0px solid!important;" class="title-menu-left">
+
+                                <span class="design-kit">学 员 管 理</span>
+                                <i data-toggle="tooltip" class="entypo-cog pull-right config-wrap"></i>
+
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_user_url' %}" title="学员列表">
+                                <i class="icon-user"></i>
+                                <span>学员列表</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_category_url' %}" title="教学模式">
+                                <i class="icon-heart"></i>
+                                <span>教学模式</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_frequency_url' %}" title="学员等级">
+                                <i class="icon-graph-line"></i>
+                                <span>学员等级</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_black_url' %}" title="黑名单管理">
+                                <i class="maki-roadblock"></i>
+                                <span>黑名单管理</span>
+
+                                <div id="navBlacklistCount"
+                                     style="display: inline-block; float: right;position: relative;left: auto;top: auto;"
+                                     class="noft-red"></div>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="topnav menu-left-nest">
+                        <li>
+                            <a href="#" style="border-left:0px solid!important;" class="title-menu-left">
+
+                                <span class="design-kit">车 辆 管 理</span>
+                                <i data-toggle="tooltip" class="entypo-cog pull-right config-wrap"></i>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_traintime_url' %}" title="时间设置">
+                                <i class="entypo-clock"></i>
+                                <span>时间设置</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_coach_url' %}" title="教练管理">
+                                <i class="entypo-users"></i>
+                                <span>教练管理</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_place_url' %}" title="场地管理">
+                                <i class="maki-school"></i>
+                                <span>场地管理</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_car_url' %}" title="车辆管理">
+                                <i class="fontawesome-road"></i>
+                                <span>车辆管理</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="topnav menu-left-nest">
+                        <li>
+                            <a href="#" style="border-left:0px solid!important;" class="title-menu-left">
+
+                                <span class="component">系 统 管 理</span>
+                                <i data-toggle="tooltip" class="entypo-cog pull-right config-wrap"></i>
+
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_basic_url' %}" title="基础设置">
+                                <i class="icon-media-record"></i>
+                                <span>基础设置</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="tooltip-tip ajax-load" href="{% url 'list_feedback_url' %}" title="建议管理">
+                                <i class="icon-message"></i>
+                                <span>建议管理</span>
+
+                                <div id="navMsgCount"
+                                     style="display: inline-block; float: right;position: relative;left: auto;top: auto;"
+                                     class="noft-red"></div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="tooltip-tip" href="#" title="信息中心">
+                                <i class="icon-menu"></i>
+                                <span>信息中心</span>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a class="tooltip-tip ajax-load" href="{% url 'list_smstemplate_url' %}"
+                                       title="短信模板">
+                                        <i class="icon icon-mail"></i>
+                                        <span>短信模板</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="tooltip-tip ajax-load" href="{% url 'list_siteletter_url' %}"
+                                       title="站内消息">
+                                        <i class="icon icon-message"></i>
+                                        <span>站内信模板</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="tooltip-tip ajax-load" href="{% url 'list_smslog_url' %}" title="消息发送记录">
+                                        <i class="icon-retweet"></i>
+                                        <span>消息发送记录</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+
+                    </ul>
+                    <div class="side-dash">
+
+                        <h3>
+                            <span>浏览量</span>
+                        </h3>
+
+                        <div id="g1" style="height:180px" class="gauge"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END OF SIDE MENU -->
+    <!-- PAPER WRAP -->
+    <div class="wrap-fluid">
+        <div id="load_content">
+            {% block content %} {% endblock %}
+        </div>
+    </div>
+    <!-- END OF PAPER WRAP -->
+
+    <script src="{% static 'js/ionsound/ion.sound.js' %}"></script>
+    <script>
+        $(function () {
+
+            ion.sound({
+                sounds: [
+                    {name: "reserve"}
+                ],
+                path: "{% static 'js/ionsound/sounds/' %}",
+                loop: 2
+            });
+            $.ajax({
+                url: '/admin/drive/notice/',
+                cache: false,
+                type: 'get',
+                success: function (data) {
+                    $('#loadedData').remove();
+                    $('body').append(data);
+                    var msgOne = $('#msgOne').html() || "";
+                    var msgTow = $('#msgTwo').html() || "";
+                    $('#msg-notice').html(msgOne);
+                    $('#nt-title').html(msgTow);
+                    $('#nt-title').newsTicker({
+                        row_height: 18,
+                        max_rows: 1,
+                        duration: 5000,
+                        pauseOnHover: 0
+                    });
+                    if ($.trim(msgTow) != "") {
+                        ion.sound.play("reserve");
+                    }
+                    var arr = [];
+                    $('#nt-title li').each(function () {
+                        arr.push($(this).attr('data-id'));
+                    });
+
+                    $('#reverseCount').html() != "0" && $('#navReverseCount').html($('#reverseCount').html());
+
+                    $('#examCount').html() != "0" && $('#navExamCount').html($('#examCount').html());
+                    $('#msgCount').html() != "0" && $('#navMsgCount').html($('#msgCount').html());
+                    $('#blacklistCount').html() != "0" && $('#navBlacklistCount').html($('#blacklistCount').html());
+
+                    var id = arr.join(',');
+                    if (id) {
+                        $.post('/admin/drive/toggle_alert/', {id: id});
+                    }
+                }
+            });
+            setInterval(function () {
+                $.ajax({
+                    url: '/admin/drive/notice/',
+                    type: 'get',
+                    cache: false,
+                    success: function (data) {
+                        $('#loadedData').remove();
+                        $('body').append(data);
+                        var msgOne = $('#msgOne').html() || "";
+                        var msgTow = $('#msgTwo').html() || "";
+                        $('#msg-notice').html(msgOne);
+                        $('#nt-title').html(msgTow);
+                        var arr = [];
+                        $('#nt-title').newsTicker({
+                            row_height: 18,
+                            max_rows: 1,
+                            duration: 5000,
+                            pauseOnHover: 0
+                        });
+                        if ($.trim(msgTow) != "") {
+                            ion.sound.play("reserve");
+                        }
+                        $('#nt-title li').each(function () {
+                            arr.push($(this).attr('data-id'));
+                        });
+                        $('#reverseCount').html() != "0" && $('#navReverseCount').html($('#reverseCount').html());
+	                    $('#examCount').html() != "0" && $('#navExamCount').html($('#examCount').html());
+	                    $('#msgCount').html() != "0" && $('#navMsgCount').html($('#msgCount').html());
+	                    $('#blacklistCount').html() != "0" && $('#navBlacklistCount').html($('#blacklistCount').html());
+                        var id = arr.join(',');
+                        if (id) {
+                            $.post('/admin/drive/toggle_alert/', {id: id});
+                        }
+                    }
+                });
+            }, 50000);
+        });
+
+    </script>
+    <style>
+        .dropdown-notice {
+            max-height: 400px;
+            overflow-y: auto;
+            min-width: 300px;
+        }
+
+        .dropdown-notice > li > a {
+            padding: 10px !important;
+            line-height: 20px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .dropdown-notice > li > a b {
+            cursor: pointer;
+        }
+    </style>
+    </body>
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% block title %}学员中心{% endblock %}
+{% block body %}
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="left">
+
+            </div>
+            <div class="center sliding">学员中心</div>
+            <div class="right">
+                <a class="open-popover link icon-only" href="#">
+                    <i class="icon icon-bars"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="pages navbar-through">
+
+        <div data-page="msg" class="page no-toolbar no-swipeback">
+
+            <div class="page-content infinite-scroll" data-distance="50" data-url="/app/load_reserver_data_student/">
+
+                <div class="pull-to-refresh-layer">
+                    <div class="preloader"></div>
+                    <div class="pull-to-refresh-arrow"></div>
+                </div>
+
+                <div class="content-block-title">学员基本信息</div>
+                <div class="list-block">
+                    <ul>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-media"><i class="icon icon-form-name"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">学员姓名</div>
+                                    <div class="item-after">{{ user.name }}</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-media"><i class="icon icon-form-settings"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">学车阶段</div>
+                                    <div class="item-after">{{ user.get_exam_stage_display }}</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-media"><i class="icon icon-form-comment"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">消息中心</div>
+                                    <div class="item-after">
+                                        <a class="badge external  {% if message_count > 0 %}bg-red{% endif %}"
+                                           href="{% url 'message_list' %}">
+                                            {{ message_count }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-content">
+                                <div class="item-media"><i class="icon icon-form-calendar"></i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">
+                                        预约次数
+                                    </div>
+                                    <div class="item-after">
+                                        <span class="badge">{{ reserve_count }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {#                        <li>#}
+                        {#                            <div class="item-content">#}
+                        {#                                <div class="item-media"><i class="icon icon-form-password"></i></div>#}
+                        {#                                <div class="item-inner">#}
+                        {#                                    <div class="item-title">爽约次数</div>#}
+                        {#                                    <div class="item-after">#}
+                        {#                                        <span class="badge bg-red">{{ user.not_arrival_count }}</span>#}
+                        {#                                    </div>#}
+                        {#                                </div>#}
+                        {#                            </div>#}
+                        {#                        </li>#}
+                    </ul>
+                </div>
+
+                <div class="content-block">
+                    <a href="{% url 'reserver' %}" class="external button button-big button-fill">我要约车</a>
+                </div>
+
+                <div class="content-block-title">
+                    预约信息记录
+                </div>
+
+                <div class="infinite-block">
+
+                </div>
+
+                <div class="infinite-scroll-preloader">
+                    <div class="preloader"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block extra_page %}
+
+    <div class="popover popover-menu">
+        <div class="popover-angle"></div>
+        <div class="popover-inner">
+            <div class="list-block">
+                <ul>
+                    <li>
+                        <a class="list-button item-link external" href="{% url 'reserver' %}">预约学车</a>
+                    </li>
+                    <li>
+                        <a class="list-button item-link external" href="{% url 'message_list' %}">消息中心</a>
+                    </li>
+                    <li>
+                        <a class="list-button item-link external" href="{% url 'exam' %}">申请考试</a>
+                    </li>
+                    <li>
+                        <a class="list-button item-link external" href="{% url 'feedback' %}">投诉</a>
+                    </li>
+                    <li>
+                        <a class="list-button item-link external" id="logout" href="{% url 'logout' %}">退出</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        {% if top_reverse_list %}
+            {% for item in top_reverse_list %}
+                App.addNotification({
+                    title: '预约提醒！',
+                    message: '您预约于 {{ item.train_date | date:"Y-m-d"}} ' +
+                    '{{ item.train_time_span.start_time | date:"H:s"}}-' +
+                    '{{ item.train_time_span.end_time | date:"H:s"}} ' +
+                    '在{{ item.user.coach_car.training_place }} ' +
+                    '学车，请按时到哦！',
+                    additionalClass: 'reverse-notifications',
+                    closeIcon: false,
+                    hold: 5000,
+                    onClick: function () {
+                        App.closeNotification('.reverse-notifications');
+                    }
+                });
+            {% endfor %}
+        {% endif %}
+        {% if messages %}
+            {% for message in messages %}
+                App.addNotification({
+                    title: '操作提醒！',
+                    message: '{{ message }}',
+                    additionalClass: 'operation-notifications',
+                    closeIcon: false,
+                    onClick: function () {
+                        App.closeNotification('.operation-notifications');
+                    }
+                });
+            {% endfor %}
+        {% endif %}
+    </script>
+{% endblock %}

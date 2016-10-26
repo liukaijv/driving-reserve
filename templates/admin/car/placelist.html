@@ -1,0 +1,162 @@
+{% extends "admin/_base.html" %}
+{% load pagination_tags %}
+{% block title %}教练车场地列表{% endblock %}
+
+{% block content %}
+    <div class="container-fluid paper-wrap bevel tlbr">
+        <!-- CONTENT -->
+        <!--TITLE -->
+        <div class="row">
+            <div id="paper-top">
+                <div class="col-sm-3">
+                    <h2 class="tittle-content-header">
+                        <i class="icon-media-record"></i>
+                        <span>教练车场地列表</span>
+                    </h2>
+                </div>
+                <div class="col-sm-7">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="tittle-middle-header">
+                        <div class="alert">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="btn-group btn-wigdet pull-right visible-lg">
+                        <div class="btn" data-toggle="dropdown">操作</div>
+                        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul role="menu" class="dropdown-menu">
+                            <li>
+                                <a href="{% url 'add_place_url' %}" title="添加场地">
+                                    <span class="entypo-plus-circled margin-iconic"></span>添加场地</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ TITLE -->
+        <!-- BREADCRUMB -->
+        <ul id="breadcrumb">
+            <li>
+                <span class="entypo-home"></span>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'list_car_url' %}" title="车辆管理">车辆管理</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'list_place_url' %}" title="车辆列表">场地列表</a>
+            </li>
+            <li class="pull-right">
+                <form class="search-form form-inline clearfix" action="{% url 'list_place_url' %}" method="get">
+                    <div class="input-widget">
+                        {% for obj in filter.form %}
+                            {{ obj }}
+                        {% endfor %}
+                        <input class="hidden" type="submit">
+                    </div>
+                </form>
+            </li>
+        </ul>
+        <!-- END OF BREADCRUMB -->
+        <div class="content-wrap">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- BLANK PAGE-->
+                    <div class="nest" id="tableStaticClose">
+                        <div class="body-nest" id="tableStatic">
+                            <section id="flip-scroll">
+                                <table class="table table-bordered table-striped cf">
+                                    <thead class="cf">
+
+                                    <tr>
+                                        <th>训练场地</th>
+                                        <th>负责人姓名</th>
+                                        <th>负责人电话</th>
+                                        <th>场地地址</th>
+                                        <th class="text-center">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% autopaginate place_list 15 %}
+                                    {% for item in place_list %}
+                                        <tr>
+                                            <td>{{ item.place_name }}</td>
+                                            <td>{{ item.guard_name }}</td>
+                                            <td>{{ item.guard_mobile }}</td>
+                                            <td>{{ item.address }}</td>
+                                            <td class="text-center">
+                                                <a href="{% url 'modify_place_url' item.id %}"
+                                                   class="btn btn-default ajax-load">
+                                                    <span class="entypo-pencil"></span>&nbsp;&nbsp;编辑
+                                                </a>
+                                                <a href="{% url 'delete_place_url' item.id %}"
+                                                   class="btn btn-info del-item">
+                                                    <span class="entypo-trash"></span>&nbsp;&nbsp;删除
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+
+                                <input type="hidden" id="checked-ids">
+                                {% paginate %}
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <!-- END OF BLANK PAGE -->
+            </div>
+            <!-- /END OF CONTENT -->
+            {% include 'admin/_foot.html' %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+
+        $('#bulk-action').click(function () {
+            var action = $('#bulk-actions').val();
+            if (action == '') {
+                alert('请先选择操作');
+                return false;
+            }
+            var id = $('#checked-ids').val();
+            if (!id) {
+                alert('你还没有选择操作项');
+                return false;
+            }
+            if (confirm('你确定要进行此操作吗？')) {
+                $.post('/admin/place/delete/', {id: id}, function (data) {
+                    if (data == '1') {
+                        window.location.href = '/admin/place/list/';
+                    } else {
+                        alert('操作失败')
+                    }
+                });
+            }
+            return false;
+        });
+    </script>
+{% endblock %}
+
+
+
+
+
+

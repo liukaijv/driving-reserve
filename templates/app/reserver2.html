@@ -1,0 +1,53 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% block title %}预约练车{% endblock %}
+{% block body %}
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="left">
+                <a href="javascript:;" onclick="window.history.go(-1);" class="link icon-only">
+                    <i class="icon icon-back"></i>
+                </a>
+            </div>
+            <div class="center sliding">预约练车</div>
+            <div class="right">
+            </div>
+        </div>
+    </div>
+
+    <div class="pages navbar-through">
+
+        <div data-page="msg" class="page no-toolbar no-swipeback">
+
+            <div class="page-content">
+
+
+                <div class="reverse-data-block">
+
+                </div>
+
+
+                <div class="reserve-btn-wrapper">
+                    <input type="button" id="reserve-action" class="button button-big button-fill" value="确定预约">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+        $(function () {
+            $('.reverse-data-block').load('/app/load_reserver_data/', function () {
+                $('.reserve-btn-wrapper').show();
+            });
+        });
+
+    </script>
+{% endblock %}

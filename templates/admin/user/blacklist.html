@@ -1,0 +1,108 @@
+{% extends "admin/_base.html" %}
+{% load pagination_tags %}
+{% block title %}黑名单列表{% endblock %}
+{% block content %}
+    <div class="container-fluid paper-wrap bevel tlbr">
+        <!-- CONTENT -->
+        <!--TITLE -->
+        <div class="row">
+            <div id="paper-top">
+                <div class="col-sm-3">
+                    <h2 class="tittle-content-header">
+                        <i class="icon-media-record"></i>
+                        <span>黑名单列表</span>
+                    </h2>
+                </div>
+                <div class="col-sm-7">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="tittle-middle-header">
+                        <div class="alert">
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ TITLE -->
+        <!-- BREADCRUMB -->
+        <ul id="breadcrumb">
+            <li>
+                <span class="entypo-home"></span>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'list_user_url' %}" title="学员管理">学员管理</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="学员列表">黑名单列表</a>
+            </li>
+            <li class="pull-right">
+                <form class="search-form form-inline clearfix" action="{% url 'list_user_url' %}" method="get">
+                    <div class="input-widget">
+                        {% for obj in filter.form %}
+                            {{ obj }}
+                        {% endfor %}
+                    </div>
+                </form>
+            </li>
+        </ul>
+        <!-- END OF BREADCRUMB -->
+        <div class="content-wrap">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- BLANK PAGE-->
+                    <div class="nest" id="tableStaticClose">
+                        <div class="body-nest" id="tableStatic">
+                            <section id="flip-scroll">
+                                <table class="table table-bordered table-striped cf">
+                                    <thead class="cf">
+                                    <tr>
+                                        <th>学员姓名</th>
+                                        <th>学员电话</th>
+                                        <th>所处科目</th>
+                                        <th>教学套餐</th>
+                                        <th>学员等级</th>
+                                        <th>教练车</th>
+                                        <th>爽约次数</th>
+                                        <th class="text-center">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% autopaginate black_list 10 %}
+                                    {% for item in black_list %}
+                                        <tr>
+                                            <td>{{ item.name }}</td>
+                                            <td>{{ item.mobile }}</td>
+                                            <td>{{ item.id_card }}</td>
+                                            <td>{{ item.category.name }}</td>
+                                            <td>{{ item.train_frequency.name }}</td>
+                                            <td>{{ item.coach_car.license }}</td>
+                                            <td>{{ item.not_arrival_count }}</td>
+                                            <td class="text-center">
+                                                <a href="{% url 'delete_black_url' item.id %}" id="delete_black" class="btn btn-info del-item">
+                                                    <span class="entypo-trash"></span>&nbsp;&nbsp;解除黑名单
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                    {% paginate %}
+                                </table>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <!-- END OF BLANK PAGE -->
+            </div>
+            <!-- /END OF CONTENT -->
+            {% include 'admin/_foot.html' %}
+        </div>
+    </div>
+{% endblock %}

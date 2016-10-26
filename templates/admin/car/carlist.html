@@ -1,0 +1,137 @@
+{% extends "admin/_base.html" %}
+{% load pagination_tags %}
+{% block title %}教练车列表{% endblock %}
+
+{% block content %}
+<div class="container-fluid paper-wrap bevel tlbr">
+    <!-- CONTENT -->
+    <!--TITLE -->
+    <div class="row">
+        <div id="paper-top">
+            <div class="col-sm-3">
+                <h2 class="tittle-content-header">
+                    <i class="icon-media-record"></i>
+                    <span>教练车车辆列表</span>
+                </h2>
+            </div>
+            <div class="col-sm-7">
+                <div class="devider-vertical visible-lg"></div>
+                <div class="tittle-middle-header">
+                    <div class="alert">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="devider-vertical visible-lg"></div>
+                <div class="btn-group btn-wigdet pull-right visible-lg">
+                    <div class="btn" data-toggle="dropdown">操作</div>
+                    <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul role="menu" class="dropdown-menu">
+                        <li>
+                            <a href="{% url 'add_car_url' %}">
+                                <span class="entypo-plus-circled margin-iconic"></span>新建车辆</a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="entypo-heart margin-iconic"></span>批量删除</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ TITLE -->
+    <!-- BREADCRUMB -->
+    <ul id="breadcrumb">
+        <li>
+            <span class="entypo-home"></span>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{% url 'list_car_url' %}" title="车辆管理">车辆管理</a>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{% url 'list_car_url' %}" title="车辆列表">车辆列表</a>
+        </li>
+        <li class="pull-right">
+            <form class="search-form form-inline clearfix" action="{% url 'list_car_url' %}" method="get">
+                <div class="input-widget">
+                    {% for obj in filter.form %}
+                    {{ obj }}
+                    {% endfor %}
+                    <input type="submit" class="hidden"/>
+                </div>
+            </form>
+        </li>
+    </ul>
+    <!-- END OF BREADCRUMB -->
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- BLANK PAGE-->
+                <div class="nest" id="tableStaticClose">
+                    <div class="body-nest" id="tableStatic">
+                        <section id="flip-scroll">
+                            <table class="table table-bordered table-striped cf">
+                                <thead class="cf">
+                                <tr>
+                                    <th class="text-center"><input type="checkbox"></th>
+                                    <th>车辆牌照</th>
+                                    <th>车辆训练类型</th>
+                                    <th>车辆种类</th>
+                                    <th>训练场地</th>
+                                    <th class="text-center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% autopaginate car_list 10 %}
+                                {% for item in car_list %}
+                                <tr>
+                                    <td class="text-center"><input type="checkbox"></td>
+                                    <td>{{ item.license }}</td>
+                                    <td>{{ item.train_type }}</td>
+                                    <td>{{ item.get_car_type_display }}</td>
+                                    <td>{{ item.training_place.place_name }}</td>
+                                    <td class="text-center">
+                                        <a href="{% url 'view_car_url' item.id %}"
+                                           class="btn btn-primary ajax-load">
+                                            <span class="entypo-search"></span>&nbsp;&nbsp;查看
+                                        </a>
+                                        <a href="{% url 'modify_car_url' item.id %}"
+                                           class="btn btn-default ajax-load">
+                                            <span class="entypo-pencil"></span>&nbsp;&nbsp;编辑
+                                        </a>
+                                        <a href="{% url 'delete_car_url' item.id %}"
+                                           class="btn btn-info del-item">
+                                            <span class="entypo-trash"></span>&nbsp;&nbsp;删除
+                                        </a>
+                                        <a href="{% url 'list_caruse_url' item.id %}"
+                                           class="btn btn-warning ajax-load">
+                                            <span class="entypo-trash"></span>&nbsp;&nbsp;禁用时间
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {% paginate %}
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF BLANK PAGE -->
+        </div>
+        <!-- /END OF CONTENT -->
+        {% include 'admin/_foot.html' %}
+    </div>
+</div>
+{% endblock %}

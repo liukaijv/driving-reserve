@@ -1,0 +1,223 @@
+{% extends "admin/_base.html" %}
+{% load staticfiles %}
+{% block title %}发送短信{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'js/button/ladda/ladda.min.css' %}">
+    <style type="text/css">
+        .button-demo, .progress-demo {
+            display: inline-block;
+            margin-right: 3px;
+            margin-bottom: 20px;
+        }
+
+        .msg-send-box {
+            margin-top: 20px;
+        }
+
+        .select-box {
+            float: left;
+        }
+
+        .select-box select {
+            width: 290px;
+            height: 200px;
+            border: 1px solid #ddd;
+            padding: 4px;
+        }
+
+        .select-action {
+            float: left;
+            margin-top: 70px;
+        }
+
+        .select-action p {
+            cursor: pointer;
+            margin: 10px;
+            border: 1px solid #ddd;
+            padding: 4px 14px;
+        }
+    </style>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/button/ladda/spin.min.js' %}"></script>
+    <script src="{% static 'js/button/ladda/ladda.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid paper-wrap bevel tlbr">
+        <!-- CONTENT -->
+        <!--TITLE -->
+        <div class="row">
+            <div id="paper-top">
+                <div class="col-sm-3">
+                    <h2 class="tittle-content-header">
+                        <i class="icon-media-record"></i>
+                        <span>发送信息</span>
+                    </h2>
+                </div>
+                <div class="col-sm-7">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="tittle-middle-header">
+                        <div class="alert">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ TITLE -->
+        <!-- BREADCRUMB -->
+        <ul id="breadcrumb">
+            <li>
+                <span class="entypo-home"></span>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="系统设置">系统设置</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="发送短信">发送短信</a>
+            </li>
+        </ul>
+        <!-- END OF BREADCRUMB -->
+        <div class="content-wrap">
+
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- BLANK PAGE-->
+                    <div class="nest" id="tableStaticClose">
+                        <div class="body-nest" id="validation">
+                            <div class="form_center">
+                                <div>
+                                    短信内容：<br>{{ content }}
+                                </div>
+                                <br>
+
+                                <form method="get" id="searchForm">
+                                    <div class="form-inline">
+                                        <label for="inputSearch" class="sr-only">姓名电话</label>
+                                        <input type="text" placeholder="姓名" name="name"
+                                               class="form-control">
+                                        <input type="text" placeholder="电话" name="mobile"
+                                               class="form-control">
+                                        <a href="javascript:" id="searchInput" class="btn btn-primary"
+                                           type="button">搜索学员</a>
+                                    </div>
+                                </form>
+
+                                <fieldset>
+                                    <div class="clearfix msg-send-box">
+
+                                        <div class="select-box">
+                                            <p>学员列表</p>
+                                            <select id="select-left" name="selectL" multiple="multiple">
+                                            </select>
+                                        </div>
+                                        <div class="select-action">
+                                            <p id="action-add" title="添加">»</p>
+
+                                            <p id="action-del" title="移除">«</p>
+                                        </div>
+                                        <div class="select-box">
+                                            <p>已选学员</p>
+                                            <select id="select-right" name="selectR" multiple="multiple">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <br>
+
+                                <div class="form-actions">
+                                    <section class="progress-demo">
+                                        <button class="ladda-button" data-color="mint" data-style="expand-right"
+                                                data-size="xs">确认发送
+                                        </button>
+                                    </section>
+                                    <a href="{% url 'list_smstemplate_url' %}" class="btn">返回</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END OF BLANK PAGE -->
+            </div>
+            <!-- /END OF CONTENT -->
+
+            <script>
+                var leftSelect = $("#select-left");
+                var rightSelect = $("#select-right");
+                $("#action-add").on("click", function () {
+                    leftSelect.find("option:selected").each(function () {
+                        $(this).remove().appendTo(rightSelect);
+                    });
+                });
+                $("#action-del").on("click", function () {
+                    rightSelect.find("option:selected").each(function () {
+                        $(this).remove().appendTo(leftSelect);
+                    });
+                });
+                leftSelect.dblclick(function () {
+                    $(this).find("option:selected").each(function () {
+                        $(this).remove().appendTo(rightSelect);
+                    });
+                });
+                rightSelect.dblclick(function () {
+                    $(this).find("option:selected").each(function () {
+                        $(this).remove().appendTo(leftSelect);
+                    });
+                });
+
+                $(document).ready(function () {
+
+                    // Bind progress buttons and simulate loading progress
+                    Ladda.bind('.progress-demo button', {
+                        callback: function (instance) {
+                            var to = "";
+                            var tempid = {{ tempid }};
+                            rightSelect.find("option").each(function () {
+                                to += $(this).val() + ",";
+                            });
+                            $.post("{% url 'send_sms_url' %}", {tempid: tempid, to: to},
+                                    function (data) {
+                                        console.log(data);
+                                    });
+                            var progress = 0;
+                            var interval = setInterval(function () {
+                                progress = Math.min(progress + Math.random() * 0.1, 1);
+                                instance.setProgress(progress);
+
+                                if (progress === 1) {
+                                    instance.stop();
+                                    clearInterval(interval);
+                                }
+                            }, 200);
+                        }
+                    });
+
+                    $("#searchInput").click(function () {
+                        var param = $("#searchForm").serialize();
+                        $.get("{% url 'list_user_search_url' %}?" + param, function (data) {
+                            if (data.result == "ok") {
+                                var user_list = data.user_list;
+                                leftSelect.html('');
+                                $.each(user_list, function () {
+                                    var option = "<option value='" + this.id + "'>" + this.name + "---" + this.mobile + "</option>";
+                                    leftSelect.append(option);
+                                });
+                            }
+                        });
+                    });
+                    $("#searchInput").click();
+                });
+
+            </script>
+            {% include 'admin/_foot.html' %}
+        </div>
+    </div>
+{% endblock %}

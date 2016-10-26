@@ -1,0 +1,46 @@
+/**
+ * LOGIN
+ */
+
+ .wrap-login {
+    margin: 0 auto;
+    width: 70%;
+}
+.login .brand {
+    color: #323A45;
+    display: block;
+    font-size: 27px;
+    font-weight: 200;
+    letter-spacing: -2px;
+    padding: 10px 20px;
+    text-align: center;
+    text-transform: uppercase;
+}
+.login .brand span {
+    font-weight: bold;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+}
+.login .brand i {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    color: #F4F4F4;
+    font-size: 9px;
+    font-style: normal;
+    letter-spacing: 0;
+    padding: 2px 3px;
+    position: relative;
+    right: -7px;
+    top: -4px;
+}
+.logo-login {
+    background: none repeat scroll 0 0 #20262E;
+    border-radius: 63px;
+    color: #FFFFFF;
+    font-size: 45px;
+    height: 60px;
+    margin: 20px auto;
+    padding: 40px 0 0;
+    text-align: center;
+    width: 100px;
+}

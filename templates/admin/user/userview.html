@@ -1,0 +1,439 @@
+{% extends "admin/_base.html" %}
+{% block title %}学员列表{% endblock %}
+{% load config_tags %}
+{% block content %}
+    <div class="container-fluid paper-wrap bevel tlbr">
+        <!-- CONTENT -->
+        <!--TITLE -->
+        <div class="row">
+            <div id="paper-top">
+                <div class="col-sm-3">
+                    <h2 class="tittle-content-header">
+                        <i class="icon-media-record"></i>
+                        <span>修改学员信息</span>
+                    </h2>
+                </div>
+                <div class="col-sm-7">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="tittle-middle-header">
+                        <div class="alert">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ TITLE -->
+        <!-- BREADCRUMB -->
+        <ul id="breadcrumb">
+            <li>
+                <span class="entypo-home"></span>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="" title="学员管理">学员管理</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'list_user_url' %}" class="ajax-load" title="学员列表">学员列表</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="查看学员信息">查看学员信息</a>
+            </li>
+        </ul>
+        <!-- END OF BREADCRUMB -->
+        <div class="content-wrap">
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <!-- BLANK PAGE-->
+                    <div class="nest">
+                        <div class="title-alt">
+                            <h6>基本信息</h6>
+
+                            <div class="titleToggle">
+                                <a class="nav-toggle-alt" href="#horizontal1">
+                                    <span class="entypo-up-open"></span>
+                                </a>
+                            </div>
+
+                        </div>
+                        <div class="body-nest" id="horizontal1">
+
+                            <table class="user-view-table">
+                                <tr>
+                                    <th>手机号：</th>
+                                    <td>{{ object.mobile }}</td>
+                                    <th>姓名：</th>
+                                    <td>{{ object.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>报考时间：</th>
+                                    <td>{{ object.create_time | date:"Y-m-d H:s" }}</td>
+                                    <th>身份证：</th>
+                                    <td>{{ object.id_card }}</td>
+                                </tr>
+                                <tr>
+                                    <th>年龄：</th>
+                                    <td>{{ object.age }}</td>
+                                    <th>性别：</th>
+                                    <td>{{ object.sex }}</td>
+                                </tr>
+                                <tr>
+                                    <th>学员等级：</th>
+                                    <td>{{ object.category.name }}</td>
+                                    <th>考试阶段：</th>
+                                    <td>{{ object.get_exam_stage_display }}</td>
+                                </tr>
+                                <tr>
+                                    <th>教学模式：</th>
+                                    <td>{{ object.train_frequency.name }}</td>
+                                    <th>车牌号：</th>
+                                    <td>{{ object.coach_car.license }}</td>
+                                </tr>
+                                <tr>
+                                    <th>教练：</th>
+                                    <td>
+                                        {{ object | get_user_coach_name }}
+                                    </td>
+                                    <th>驾照类型：</th>
+                                    <td>{{ object.coach_car.get_car_type_display }}</td>
+                                </tr>
+                                <tr>
+                                    <th>备注：</th>
+                                    <td colspan="3">
+                                        {{ object.remarks|default_if_none:"" }}
+                                    </td>
+                                </tr>
+                            </table>
+
+
+                        </div>
+                    </div>
+                    <!-- END OF BLANK PAGE -->
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <!-- BLANK PAGE-->
+                    <div class="nest">
+                        <div class="title-alt">
+                            <h6>练车信息</h6>
+
+                            <div class="titleToggle">
+                                <a class="nav-toggle-alt" href="#horizontal2">
+                                    <span class="entypo-up-open"></span>
+                                </a>
+                            </div>
+
+                        </div>
+                        <div class="body-nest" id="horizontal2">
+
+                            <div role="tabpanel">
+
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    {% if object.exam_stage > 0 %}
+                                        <li role="presentation" class="active">
+                                            <a href="#stage1" role="tab" data-toggle="tab">科目一</a>
+                                        </li>
+                                    {% endif %}
+                                    {% if object.exam_stage > 1 %}
+                                        <li role="presentation">
+                                            <a href="#stage2" role="tab" data-toggle="tab">科目二</a>
+                                        </li>
+                                    {% endif %}
+                                    {% if object.exam_stage > 2 %}
+                                        <li role="presentation">
+                                            <a href="#stage3" role="tab" data-toggle="tab">科目三</a>
+                                        </li>
+                                    {% endif %}
+                                    {% if object.exam_stage > 3 %}
+                                        <li role="presentation">
+                                            <a href="#stage4" role="tab" data-toggle="tab">科目四</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+
+                                    <div role="tabpanel" class="tab-pane active" id="stage1">
+
+                                        <div class="form-block clearfix">
+                                            <div class="form-group clearfix" style="line-height: 35px;">
+                                                <label class="col-lg-2 control-label">科目状态：</label>
+
+                                                <div class="col-lg-10">
+                                                    {% ifequal object.exam_stage 1 %}
+                                                        <select onchange="user.change_status(this);"
+                                                                class="form-control">
+                                                            {% for key,value in exam_stage_status %}
+                                                                <option value="{{ key }}"
+                                                                        {% ifequal key object.exam_stage_status %}selected{% endifequal %}>{{ value }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    {% else %}
+                                                        <span class="text-success">已经通过</span>
+                                                    {% endifequal %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="body-nest">
+
+                                            <table class="user-view-table">
+                                                <tr>
+                                                    <th style="text-align: left">预约项目</th>
+                                                    <th style="text-align: left">预约日期</th>
+                                                    <th style="text-align: left">审核状态</th>
+                                                    <th style="text-align: left">审核备注</th>
+                                                </tr>
+                                                {% for item in one_drive_reserve_log %}
+                                                    <tr>
+                                                        <td>预约练车</td>
+                                                        <td>
+                                                            {{ item.train_date | date:"Y-m-d" }} <span
+                                                                class="text-success">{{ item.train_time_span.name }}</span>
+                                                        </td>
+                                                        <td>{{ item.get_audit_status_display | safe }}</td>
+                                                        <td>{{ item.remarks }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% for item in one_exam_reserve_log %}
+                                                    <tr>
+                                                        <td>预约考试</td>
+                                                        <td>
+                                                            {{ item.create_time | date:"Y-m-d H:i" }}
+                                                        </td>
+                                                        <td>{{ item.get_audit_status_display | safe }}</td>
+                                                        <td>{{ item.remarks|default_if_none:"" }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="stage2">
+
+                                        <div class="form-block clearfix">
+                                            <div class="form-group clearfix" style="line-height: 35px;">
+                                                <label class="col-lg-2 control-label">科目状态：</label>
+
+                                                <div class="col-lg-10">
+                                                    {% ifequal object.exam_stage 2 %}
+                                                        <select onchange="user.change_status(this);"
+                                                                class="form-control">
+                                                            {% for key,value in exam_stage_status %}
+                                                                <option value="{{ key }}"
+                                                                        {% ifequal key object.exam_stage_status %}selected{% endifequal %}>{{ value }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    {% else %}
+                                                        <span class="text-success">已经通过</span>
+                                                    {% endifequal %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="body-nest">
+
+                                            <table class="user-view-table">
+                                                <tr>
+                                                    <th style="text-align: left">预约项目</th>
+                                                    <th style="text-align: left">预约日期</th>
+                                                    <th style="text-align: left">审核状态</th>
+                                                    <th style="text-align: left">审核备注</th>
+                                                </tr>
+                                                {% for item in two_drive_reserve_log %}
+                                                    <tr>
+                                                        <td>预约练车</td>
+                                                        <td>
+                                                            {{ item.train_date | date:"Y-m-d" }} <span
+                                                                class="text-success">{{ item.train_time_span.name }}</span>
+                                                        </td>
+                                                        <td>{{ item.get_audit_status_display | safe }}</td>
+                                                        <td>{{ item.remarks }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% for item in two_exam_reserve_log %}
+                                                    <tr>
+                                                        <td>预约考试</td>
+                                                        <td>
+                                                            {{ item.create_time | date:"Y-m-d H:i" }}
+                                                        </td>
+                                                        <td>{{ item.get_audit_status_display | safe }}</td>
+                                                        <td>{{ item.remarks|default_if_none:"" }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="stage3">
+
+                                        <div class="form-block clearfix">
+                                            <div class="form-group clearfix" style="line-height: 35px;">
+                                                <label class="col-lg-2 control-label">科目状态：</label>
+
+                                                <div class="col-lg-10">
+                                                    {% ifequal object.exam_stage 3 %}
+                                                        <select onchange="user.change_status(this);"
+                                                                class="form-control">
+                                                            {% for key,value in exam_stage_status %}
+                                                                <option value="{{ key }}"
+                                                                        {% ifequal key object.exam_stage_status %}selected{% endifequal %}>{{ value }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    {% else %}
+                                                        <span class="text-success">已经通过</span>
+                                                    {% endifequal %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="body-nest">
+
+                                            <table class="user-view-table">
+                                                <tr>
+                                                    <th style="text-align: left">预约项目</th>
+                                                    <th style="text-align: left">预约日期</th>
+                                                    <th style="text-align: left">审核状态</th>
+                                                    <th style="text-align: left">审核备注</th>
+                                                </tr>
+                                                {% for item in three_drive_reserve_log %}
+                                                    <tr>
+                                                        <td>预约练车</td>
+                                                        <td>
+                                                            {{ item.train_date | date:"Y-m-d" }} <span
+                                                                class="text-success">{{ item.train_time_span.name }}</span>
+                                                        </td>
+                                                        <td>{{ item.get_audit_status_display | safe }}</td>
+                                                        <td>{{ item.remarks }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% for item in three_exam_reserve_log %}
+                                                    <tr>
+                                                        <td>预约考试</td>
+                                                        <td>
+                                                            {{ item.create_time | date:"Y-m-d H:i" }}
+                                                        </td>
+                                                        <td>{{ item.get_audit_status_display | safe }}</td>
+                                                        <td>{{ item.remarks|default_if_none:"" }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="stage4">
+
+                                        <div class="form-block clearfix">
+                                            <div class="form-group clearfix" style="line-height: 35px;">
+                                                <label class="col-lg-2 control-label">科目状态：</label>
+
+                                                <div class="col-lg-10">
+                                                    {% ifequal object.exam_stage 4 %}
+                                                        <select onchange="user.change_status(this);"
+                                                                class="form-control">
+                                                            {% for key,value in exam_stage_status %}
+                                                                <option value="{{ key }}"
+                                                                        {% ifequal key object.exam_stage_status %}selected{% endifequal %}>{{ value }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    {% else %}
+                                                        <span class="text-success">已经通过</span>
+                                                    {% endifequal %}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!-- END OF BLANK PAGE -->
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <!-- BLANK PAGE-->
+                    <div class="nest">
+                        <div class="title-alt">
+                            <h6>操作日志</h6>
+
+                            <div class="titleToggle">
+                                <a class="nav-toggle-alt" href="#horizontal3">
+                                    <span class="entypo-up-open"></span>
+                                </a>
+                            </div>
+
+                        </div>
+                        <div class="body-nest" id="horizontal3">
+
+                            <table class="user-view-table">
+                                <tr>
+                                    <th style="text-align: left">操作人</th>
+                                    <th style="text-align: left">时间</th>
+                                    <th style="text-align: left">操作</th>
+                                    <th style="text-align: left">备注</th>
+                                </tr>
+                                {% for item in object.userlog_set.all %}
+                                    <tr>
+                                        <td>{% if item.is_background %}管理员{% else %}{{ item.user.name }}{% endif %}</td>
+                                        <td>{{ item.create_time | date:"Y-m-d H:s" }}</td>
+                                        <td>{{ item.behavior }}</td>
+                                        <td>{{ item.description }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+
+
+                        </div>
+                    </div>
+                    <!-- END OF BLANK PAGE -->
+                </div>
+            </div>
+
+            <!-- /END OF CONTENT -->
+            {% include 'admin/_foot.html' %}
+        </div>
+        <input type="hidden" id="stage_status" value="{{ object.exam_stage_status }}">
+        <input type="hidden" id="user_id" value="{{ object.id }}">
+    </div>
+    <style>
+        .col-lg-2 {
+            padding-right: 0px;
+            width: 80px;
+        }
+
+        .form-block {
+            padding: 30px 20px 0;
+            width: 70%;
+        }
+
+        .form-block .control-label {
+            font-weight: normal;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+    </style>
+{% endblock %}

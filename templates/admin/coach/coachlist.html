@@ -1,0 +1,125 @@
+{% extends "admin/_base.html" %}
+{% load pagination_tags %}
+{% block title %}教练列表{% endblock %}
+
+{% block content %}
+    <div class="container-fluid paper-wrap bevel tlbr">
+        <!-- CONTENT -->
+        <!--TITLE -->
+        <div class="row">
+            <div id="paper-top">
+                <div class="col-sm-3">
+                    <h2 class="tittle-content-header">
+                        <i class="icon-media-record"></i>
+                        <span>教练列表</span>
+                    </h2>
+                </div>
+                <div class="col-sm-7">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="tittle-middle-header">
+                        <div class="alert">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="btn-group btn-wigdet pull-right visible-lg">
+                        <div class="btn" data-toggle="dropdown">操作</div>
+                        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul role="menu" class="dropdown-menu">
+                            <li>
+                                <a href="{% url 'add_coach_url' %}">
+                                    <span class="entypo-plus-circled margin-iconic"></span>添加教练</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ TITLE -->
+        <!-- BREADCRUMB -->
+        <ul id="breadcrumb">
+            <li>
+                <span class="entypo-home"></span>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'list_coach_url' %}" title="教练管理">教练管理</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'list_coach_url' %}" title="教练列表">教练列表</a>
+            </li>
+            <li class="pull-right">
+                <form class="search-form form-inline clearfix" action="{% url 'list_user_url' %}" method="get">
+                    <div class="input-widget">
+                        {% for obj in filter.form %}
+                            {{ obj }}
+                        {% endfor %}
+                    </div>
+                </form>
+            </li>
+        </ul>
+        <!-- END OF BREADCRUMB -->
+        <div class="content-wrap">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- BLANK PAGE-->
+                    <div class="nest" id="tableStaticClose">
+                        <div class="body-nest" id="tableStatic">
+                            <section id="flip-scroll">
+                                <table class="table table-bordered table-striped cf">
+                                    <thead class="cf">
+                                    <tr>
+                                        <th>教练姓名</th>
+                                        <th>教练电话</th>
+                                        <th>身份证号</th>
+                                        <th>性别</th>
+                                        <th>教练车</th>
+                                        <th class="text-center">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% autopaginate coach_list 10 %}
+                                    {% for item in coach_list %}
+                                        <tr>
+                                            <td>{{ item.name }}</td>
+                                            <td>{{ item.mobile }}</td>
+                                            <td>{{ item.id_card }}</td>
+                                            <td>{{ item.sex }}</td>
+                                            <td>{{ item.coach_car.license }}</td>
+
+                                            <td class="text-center">
+                                                <a href="{% url 'modify_coach_url' item.id %}"
+                                                   class="btn btn-default ajax-load">
+                                                    <span class="entypo-pencil"></span>&nbsp;&nbsp;修改
+                                                </a>
+                                                <a href="{% url 'delete_coach_url' item.id %}"
+                                                   class="btn btn-info del-item">
+                                                    <span class="entypo-trash"></span>&nbsp;&nbsp;删除
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% paginate %}
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <!-- END OF BLANK PAGE -->
+            </div>
+            <!-- /END OF CONTENT -->
+            {% include 'admin/_foot.html' %}
+        </div>
+    </div>
+{% endblock %}

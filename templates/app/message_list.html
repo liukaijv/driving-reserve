@@ -1,0 +1,75 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% block title %}短信息{% endblock %}
+{% block body %}
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="left">
+                <a href="javascript:;" onclick="window.history.go(-1);" class="link icon-only">
+                    <i class="icon icon-back"></i>
+                </a>
+            </div>
+            <div class="center sliding">短信息</div>
+            <div class="right">
+            </div>
+        </div>
+    </div>
+
+    <div class="pages navbar-through">
+
+        <div data-page="msg" class="page no-toolbar no-swipeback">
+
+            <div class="page-content">
+
+                <div class="list-block media-list">
+                    <ul>
+                        {% if msg_list %}
+                            {% for item in msg_list %}
+                                <li class="msg-item" data-id="{{ item.id }}">
+                                    <div class="item-content item-link">
+                                        <div class="item-inner">
+                                            <div class="item-title-row">
+                                                <div class="item-title">
+                                                    {% if item.template.msg_type == 0 %}
+                                                        短信
+                                                    {% else %}
+                                                        站内消息
+                                                    {% endif %}
+                                                    {% if item.is_read %}
+                                                        <span class="badge" data-read="true">已读</span>
+                                                    {% else %}
+                                                        <span class="badge bg-orange" data-read="false">未读</span>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="item-after">{{ item.send_time|date:'Y-d-m H:s' }}</div>
+                                            </div>
+                                            <div class="item-text">
+                                                {{ item.send_content }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="msg-item">
+                                <div class="item-content item-link">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">
+                                                暂时没有数据
+                                            </div>
+                                            <div class="item-after"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+{% endblock %}

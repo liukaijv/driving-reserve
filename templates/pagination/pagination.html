@@ -1,0 +1,32 @@
+<span>当前{{ records.first }}-{{ records.last }}条，共{{ paginator.count }}条记录</span>
+<div class="pull-right">
+    {% if is_paginated %}
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li>
+                <a href="?page={{ page_obj.previous_page_number }}{{ getvars }}{{ hashtag }}" aria-label="Previous"
+                   class="prev ajax-load">&lsaquo;&lsaquo;</a>
+            </li>
+        {% else %}
+            <li class="disabled"><span class="prev">&lsaquo;&lsaquo; </span></li>
+        {% endif %}
+        {% for page in pages %}
+        {% if page %}
+        {% ifequal page page_obj.number %}
+        <li class="active"><span class="active page">{{ page }}</span></li>
+        {% else %}
+        <li><a href="?page={{ page }}{{ getvars }}{{ hashtag }}" class="page ajax-load">{{ page }}</a></li>
+        {% endifequal %}
+        {% else %}
+        <li><span>...</span></li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}{{ getvars }}{{ hashtag }}" aria-label="Next"
+                   class="next ajax-load">&rsaquo;&rsaquo;</a></li>
+        {% else %}
+            <li class="disabled next"><span class="next"> &rsaquo;&rsaquo;</span></li>
+        {% endif %}
+    </ul>
+    {% endif %}
+</div>

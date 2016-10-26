@@ -1,0 +1,138 @@
+{% extends "admin/_base.html" %}
+{% load pagination_tags %}
+{% block title %}用户反馈列表{% endblock %}
+{% block content %}
+<div class="container-fluid paper-wrap bevel tlbr">
+    <!-- CONTENT -->
+    <!--TITLE -->
+    <div class="row">
+        <div id="paper-top">
+            <div class="col-sm-3">
+                <h2 class="tittle-content-header">
+                    <i class="icon-media-record"></i>
+                    <span>基础设置</span>
+                </h2>
+            </div>
+              <div class="col-sm-7">
+                <div class="devider-vertical visible-lg"></div>
+                <div class="tittle-middle-header">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}  alert-dismissable">
+                        <a class="panel-close close" data-dismiss="alert">×</a>
+                        <i class="fa fa-coffee"></i>
+                        <strong>{{ message }}</strong>。
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ TITLE -->
+    <!-- BREADCRUMB -->
+    <ul id="breadcrumb">
+        <li>
+            <span class="entypo-home"></span>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="#" title="系统管理">系统管理</a>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{% url 'list_basic_url' %}" title="基础设置">基础设置</a>
+        </li>
+    </ul>
+    <!-- END OF BREADCRUMB -->
+    <div class="content-wrap">
+        <form role="form" class="form-horizontal" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <!-- BLANK PAGE-->
+                    <div class="nest" id="horizontalClose">
+                        <div class="title-alt">
+                            <h6>系统设置</h6>
+
+                            <div class="titleToggle">
+                                <a class="nav-toggle-alt" href="#horizontal">
+                                    <span class="entypo-up-open"></span>
+                                </a>
+                            </div>
+
+                        </div>
+                        <div class="body-nest" id="horizontal">
+
+                            <div class="form_center">
+
+
+                                <div class="form-group">
+
+                                    <label class="col-lg-2 col-sm-2 control-label"
+                                           for="id_reserve_overday">可预约天数</label>
+
+                                    <div class="col-lg-10">
+                                        {{ form.reserve_overday}}
+                                        <p class="help-block">设置可提前预约学车时间（天）.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-2 col-sm-2 control-label">是否开启黑名单</label>
+
+                                    <div class="col-lg-10">
+                                        <div class="make-switch" data-on="success" data-off="warning">
+                                            {{ form.is_open_blacklist}}
+                                        </div>
+                                        <p class="help-block">选择开启之后，设置爽约次数。如：设置黑名单爽约次数为2，学员爽约次数超过2次之后不能预约练车.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-2 col-sm-2 control-label"
+                                           for="id_blacklist_break">黑名单爽约次数</label>
+
+                                    <div class="col-lg-10">
+                                        {{form.blacklist_break}}
+                                        <p class="help-block"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-2 col-sm-2 control-label"
+                                           for="id_close_start_time">禁止预约开始时间</label>
+
+                                    <div class="col-lg-10">
+                                        {{form.close_start_time}}
+                                        <p class="help-block">开启禁止预约功能，在此时间段不可预约学车.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-2 col-sm-2 control-label"
+                                           for="id_close_end_time">禁止预约结束时间</label>
+
+                                    <div class="col-lg-10">
+                                        {{form.close_end_time}}
+                                        <p class="help-block">开启禁止预约功能，在此时间段不可预约学车.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10">
+                                        <button class="btn btn-danger" type="submit">保存</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- END OF BLANK PAGE -->
+                </div>
+            </div>
+        </form>
+        <!-- /END OF CONTENT -->
+        {% include 'admin/_foot.html' %}
+    </div>
+</div>
+{% endblock %}
+

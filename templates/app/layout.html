@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+{% load staticfiles %}
+<meta charset="utf-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+<title>{% block title %}{% endblock %}</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<link rel="stylesheet" href="{% static 'css/framework7.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
+<link rel="stylesheet" href="{% static 'css/app.css' %}">
+
+<body>
+
+<div class="statusbar-overlay"></div>
+<div class="panel-overlay"></div>
+
+<div class="views">
+
+    <div class="view view-main">
+
+        {% block body %}{% endblock %}
+
+    </div>
+
+</div>
+
+<a href="#" class="go-top" id="toTop">
+    <i class="fa fa-angle-double-up"></i>
+</a>
+
+{% block extra_page %}{% endblock %}
+
+<script src="{% static 'js/vendors/jquery/jquery-1.10.2.min.js' %}"></script>
+<!-- <script src="{% static 'js/vendors/zepto/zepto.min.js' %}"></script> -->
+<script src="{% static 'js/vendors/framework7/framework7.min.js' %}"></script>
+<script src="{% static 'js/vendors/hammer/hammer.min.js' %}"></script>
+<script src="{% static 'js/front.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

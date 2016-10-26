@@ -1,0 +1,157 @@
+{% extends "admin/_base.html" %}
+{% load pagination_tags %}
+{% load staticfiles %}
+{% block title %}预约练车列表{% endblock %}
+{% block scripts %}
+    <script>
+        function get_reserve_form(userid) {
+            if ($(".content-wrap").length > 1) {
+                $(".content-wrap:last").remove();
+            }
+            $.get("{% url 'form_drive_reserve_url' %}?id=" + userid, function (data) {
+
+                $(".content-wrap").after(data);
+                $('.list input').iCheck({
+                    checkboxClass: 'icheckbox_flat-red',
+                    radioClass: 'iradio_flat-red'
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            $("#filter_user").click(function () {
+                var param = $("#searchForm").serialize();
+                $.get("{% url 'list_user_search_url' %}?" + param, function (data) {
+                    if (data.result == "ok") {
+                        $("#userTable > tbody").html('');
+                        var html = '<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>';
+                        $.each(data.user_list, function () {
+                            var name = this.name;
+                            var mobile = this.mobile;
+                            var id_card = this.id_card;
+                            var id = this.id;
+                            var arrival_count = this.reserve_count;
+                            var btn = '<a href="javascript:;" onclick="get_reserve_form({0});" class="btn btn-info">代预约</a>';
+                            btn = btn.format(id);
+                            var tr_content = html.format(name, mobile, id_card, arrival_count, btn);
+                            $("#userTable > tbody").append(tr_content);
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+{% endblock %}
+{% block content %}
+    <div class="container-fluid paper-wrap bevel tlbr">
+        <!-- CONTENT -->
+        <!--TITLE -->
+        <div class="row">
+            <div id="paper-top">
+                <div class="col-sm-3">
+                    <h2 class="tittle-content-header">
+                        <i class="icon-media-record"></i>
+                        <span>预约练车</span>
+                    </h2>
+                </div>
+                <div class="col-sm-7">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="tittle-middle-header">
+                        <div class="alert">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ TITLE -->
+        <!-- BREADCRUMB -->
+        <ul id="breadcrumb">
+            <li>
+                <span class="entypo-home"></span>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="预约管理">预约管理</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="预约考试列表">预约练车</a>
+            </li>
+        </ul>
+        <!-- END OF BREADCRUMB -->
+        <div class="content-wrap">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="nest" id="FilteringClose">
+                        <div class="title-alt">
+                            <h6>
+                                可预约学员列表 </h6>
+
+                            <div class="titleClose">
+                                <a class="gone" href="#FilteringClose">
+                                    <span class="entypo-cancel"></span>
+                                </a>
+                            </div>
+                            <div class="titleToggle">
+                                <a class="nav-toggle-alt" href="#Filtering">
+                                    <span class="entypo-up-open"></span>
+                                </a>
+                            </div>
+
+                        </div>
+
+                        <div class="body-nest" id="Filtering">
+                            <form id="searchForm" method="get">
+                                <div class="row" style="margin-bottom:10px;">
+                                    <div class="col-sm-2">
+                                        <input class="form-control" name="name" placeholder="姓名..." type="text"/>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input class="form-control" name="mobile" placeholder="电话..." type="text"/>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <a href="javascript:;" id="filter_user" class="btn btn-info filter-api">查找</a>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <table id="userTable" class="table table-bordered table-striped cf">
+                                <thead class="cf">
+                                <tr>
+                                    <th>
+                                        学员姓名
+                                    </th>
+                                    <th>
+                                        电话
+                                    </th>
+                                    <th>
+                                        身份证
+                                    </th>
+                                    <th>
+                                        总预约次数
+                                    </th>
+                                    <th>
+                                        操作
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

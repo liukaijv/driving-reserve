@@ -1,0 +1,99 @@
+{% load staticfiles %}
+<div class="content-wrap">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="nest">
+                <div class="title-alt">
+                    <h6>预约信息</h6>
+                </div>
+
+                <div class="body-nest">
+
+                    <div class="panel-body">
+                        <form method="post" id="form_reserve" action="{% url 'form_drive_reserve_url' %}"
+                              class="form-horizontal bucket-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">学员姓名</label>
+
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{ user.name }}</p>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">电话</label>
+
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{ user.mobile }}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">学车阶段</label>
+
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{ user.get_exam_stage_display }}</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">教练</label>
+
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">
+                                        {{ coach.name }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">车辆(练车场地)</label>
+
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">
+                                        {{ user.coach_car.license }}({{ user.coach_car.training_place.place_name }})</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">学员套餐</label>
+
+                                <div class="col-sm-6">
+                                    <p class="form-control-static">{{ user.category.name }}</p>
+                                </div>
+                            </div>
+                            <div class="form-group has-error">
+                                <label class="col-sm-3 control-label">预约日期</label>
+
+                                <div class="col-sm-6">
+                                    <input type="text" placeholder="日期" name="reservedate" class="form-control datepicker">
+                                </div>
+                            </div>
+
+                            <div class="form-group has-error">
+                                <label class="col-sm-3 control-label">预约时间</label>
+
+                                <div class="col-sm-6">
+                                    <ul class="list" style="padding: 8px 0 0;">
+                                        {% for id,name in reserve_time %}
+                                            <li style="width: 80px">
+                                                <input type="checkbox" id="id_{{ id }}" name="reservetime[]"
+                                                       onclick="reserve.check_reserve(this);" value="{{ id }}">
+                                                <label for="id_{{ id }}">{{ name }}</label>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin:30px 0 0 0;">
+                                <div class="col-lg-offset-2 col-lg-10">
+                                    <input type="hidden" name="userid" value="{{ user.id }}">
+                                    <button class="btn btn-danger" onclick="return reserve.check_reserve();" type="submit">提交预约信息</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+{% extends "admin/_base.html" %}
+{% load staticfiles %}
+{% block title %}教练车列表{% endblock %}
+{% block content %}
+<link href="{% static 'js/iCheck/flat/all.css' %}" rel="stylesheet">
+<div class="container-fluid paper-wrap bevel tlbr">
+    <!-- CONTENT -->
+    <!--TITLE -->
+    <div class="row">
+        <div id="paper-top">
+            <div class="col-sm-3">
+                <h2 class="tittle-content-header">
+                    <i class="icon-media-record"></i>
+                    <span>添加教练车</span>
+                </h2>
+            </div>
+            <div class="col-sm-7">
+                <div class="devider-vertical visible-lg"></div>
+                <div class="tittle-middle-header">
+                    <div class="alert">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ TITLE -->
+    <!-- BREADCRUMB -->
+    <ul id="breadcrumb">
+        <li>
+            <span class="entypo-home"></span>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{% url 'list_car_url' %}" title="车辆管理">车辆管理</a>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{% url 'list_car_url' %}" title="车辆列表">车辆列表</a>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="#" title="Sample page 3">修改车辆</a>
+        </li>
+    </ul>
+    <!-- END OF BREADCRUMB -->
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- BLANK PAGE-->
+                <div class="nest" id="tableStaticClose">
+                    <div class="body-nest" id="validation">
+                        <div class="form_center">
+                            <form action="" class="form-horizontal" onsubmit="return car.check_days();" method="post" novalidate="novalidate">
+                                {% csrf_token %}
+                                <fieldset>
+                                    {% for field in form %}
+                                    <div class="control-group error">
+                                        {% if field.field.required %}
+                                        <span class="color-red">*</span>
+                                        {% endif %}
+                                        <label class="control-label" for="id_{{ field.name }}">{{ field.label }}</label>
+                                        {{ field }}
+                                        {{ field.errors }}
+
+                                    </div>
+                                    {% endfor %}
+                                    {{ form.non_field_errors }}
+                                    <div class="form-actions" style="margin:20px 0 0 0;">
+                                        <button type="submit" class="btn btn-primary">保存</button>
+                                        <a href="{% url 'list_car_url' %}" class="btn ajax-load">返回</a>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF BLANK PAGE -->
+        </div>
+        <!-- /END OF CONTENT -->
+        {% include 'admin/_foot.html' %}
+    </div>
+</div>
+{% endblock %}
+
+
+

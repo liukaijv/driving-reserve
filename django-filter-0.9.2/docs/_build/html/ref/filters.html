@@ -1,0 +1,319 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Filter Reference &mdash; django-filter 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="django-filter 0.9.0 documentation" href="../index.html" />
+    <link rel="next" title="Widget Reference" href="widgets.html" />
+    <link rel="prev" title="Using django-filter" href="../usage.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="widgets.html" title="Widget Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../usage.html" title="Using django-filter"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">django-filter 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="filter-reference">
+<h1>Filter Reference<a class="headerlink" href="#filter-reference" title="Permalink to this headline">¶</a></h1>
+<p>This is a reference document with a list of the filters and their arguments.</p>
+<div class="section" id="filters">
+<h2>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="charfilter">
+<h3><tt class="docutils literal"><span class="pre">CharFilter</span></tt><a class="headerlink" href="#charfilter" title="Permalink to this headline">¶</a></h3>
+<p>This filter does simple character matches, used with <tt class="docutils literal"><span class="pre">CharField</span></tt> and
+<tt class="docutils literal"><span class="pre">TextField</span></tt> by default.</p>
+</div>
+<div class="section" id="booleanfilter">
+<h3><tt class="docutils literal"><span class="pre">BooleanFilter</span></tt><a class="headerlink" href="#booleanfilter" title="Permalink to this headline">¶</a></h3>
+<p>This filter matches a boolean, either <tt class="docutils literal"><span class="pre">True</span></tt> or <tt class="docutils literal"><span class="pre">False</span></tt>, used with
+<tt class="docutils literal"><span class="pre">BooleanField</span></tt> and <tt class="docutils literal"><span class="pre">NullBooleanField</span></tt> by default.</p>
+</div>
+<div class="section" id="choicefilter">
+<h3><tt class="docutils literal"><span class="pre">ChoiceFilter</span></tt><a class="headerlink" href="#choicefilter" title="Permalink to this headline">¶</a></h3>
+<p>This filter matches an item of any type by choices, used with any field that
+has <tt class="docutils literal"><span class="pre">choices</span></tt>.</p>
+</div>
+<div class="section" id="typedchoicefilter">
+<h3><tt class="docutils literal"><span class="pre">TypedChoiceFilter</span></tt><a class="headerlink" href="#typedchoicefilter" title="Permalink to this headline">¶</a></h3>
+<p>The same as <tt class="docutils literal"><span class="pre">ChoiceFilter</span></tt> with the added possibility to convert value to
+match against. This could be done by using <cite>coerce</cite> parameter.
+An example use-case is limiting boolean choices to match against so only
+some predefined strings could be used as input of a boolean filter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">django_filters</span>
+<span class="kn">from</span> <span class="nn">distutils.util</span> <span class="kn">import</span> <span class="n">strtobool</span>
+
+<span class="n">BOOLEAN_CHOICES</span> <span class="o">=</span> <span class="p">((</span><span class="s">&#39;false&#39;</span><span class="p">,</span> <span class="s">&#39;False&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;true&#39;</span><span class="p">,</span> <span class="s">&#39;True&#39;</span><span class="p">),)</span>
+
+<span class="k">class</span> <span class="nc">YourFilterSet</span><span class="p">(</span><span class="n">django_filters</span><span class="o">.</span><span class="n">FilterSet</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">flag</span> <span class="o">=</span> <span class="n">django_filters</span><span class="o">.</span><span class="n">TypedChoiceFilter</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="n">BOOLEAN_CHOICES</span><span class="p">,</span>
+                                            <span class="nb">coerce</span><span class="o">=</span><span class="n">strtobool</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multiplechoicefilter">
+<h3><tt class="docutils literal"><span class="pre">MultipleChoiceFilter</span></tt><a class="headerlink" href="#multiplechoicefilter" title="Permalink to this headline">¶</a></h3>
+<p>The same as <tt class="docutils literal"><span class="pre">ChoiceFilter</span></tt> except the user can select multiple items and it
+selects the OR of all the choices.</p>
+<p>Advanced Use: Depending on your application logic, when all or no choices are
+selected, filtering may be a noop. In this case you may wish to avoid the
+filtering overhead, particularly of the <cite>distinct</cite> call.</p>
+<p>Set <cite>always_filter</cite> to False after instantiation to enable the default <cite>is_noop</cite>
+test.</p>
+<p>Override <cite>is_noop</cite> if you require a different test for your application.</p>
+</div>
+<div class="section" id="datefilter">
+<h3><tt class="docutils literal"><span class="pre">DateFilter</span></tt><a class="headerlink" href="#datefilter" title="Permalink to this headline">¶</a></h3>
+<p>Matches on a date.  Used with <tt class="docutils literal"><span class="pre">DateField</span></tt> by default.</p>
+</div>
+<div class="section" id="datetimefilter">
+<h3><tt class="docutils literal"><span class="pre">DateTimeFilter</span></tt><a class="headerlink" href="#datetimefilter" title="Permalink to this headline">¶</a></h3>
+<p>Matches on a date and time.  Used with <tt class="docutils literal"><span class="pre">DateTimeField</span></tt> by default.</p>
+</div>
+<div class="section" id="timefilter">
+<h3><tt class="docutils literal"><span class="pre">TimeFilter</span></tt><a class="headerlink" href="#timefilter" title="Permalink to this headline">¶</a></h3>
+<p>Matches on a time.  Used with <tt class="docutils literal"><span class="pre">TimeField</span></tt> by default.</p>
+</div>
+<div class="section" id="modelchoicefilter">
+<h3><tt class="docutils literal"><span class="pre">ModelChoiceFilter</span></tt><a class="headerlink" href="#modelchoicefilter" title="Permalink to this headline">¶</a></h3>
+<p>Similar to a <tt class="docutils literal"><span class="pre">ChoiceFilter</span></tt> except it works with related models, used for
+<tt class="docutils literal"><span class="pre">ForeignKey</span></tt> by default.</p>
+</div>
+<div class="section" id="modelmultiplechoicefilter">
+<h3><tt class="docutils literal"><span class="pre">ModelMultipleChoiceFilter</span></tt><a class="headerlink" href="#modelmultiplechoicefilter" title="Permalink to this headline">¶</a></h3>
+<p>Similar to a <tt class="docutils literal"><span class="pre">MultipleChoiceFilter</span></tt> except it works with related models, used
+for <tt class="docutils literal"><span class="pre">ManyToManyField</span></tt> by default.</p>
+</div>
+<div class="section" id="numberfilter">
+<h3><tt class="docutils literal"><span class="pre">NumberFilter</span></tt><a class="headerlink" href="#numberfilter" title="Permalink to this headline">¶</a></h3>
+<p>Filters based on a numerical value, used with <tt class="docutils literal"><span class="pre">IntegerField</span></tt>, <tt class="docutils literal"><span class="pre">FloatField</span></tt>,
+and <tt class="docutils literal"><span class="pre">DecimalField</span></tt> by default.</p>
+</div>
+<div class="section" id="rangefilter">
+<h3><tt class="docutils literal"><span class="pre">RangeFilter</span></tt><a class="headerlink" href="#rangefilter" title="Permalink to this headline">¶</a></h3>
+<p>Filters where a value is between two numerical values, or greater than a minimum or less than a maximum where only one limit value is provided.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">FilterSet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter for Books by Price&quot;&quot;&quot;</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">RangeFilter</span><span class="p">()</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Book</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;price&#39;</span><span class="p">]</span>
+
+<span class="n">qs</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;title&#39;</span><span class="p">)</span>
+
+<span class="c"># Range: Books between 5€ and 15€</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">F</span><span class="p">({</span><span class="s">&#39;price_0&#39;</span><span class="p">:</span> <span class="s">&#39;5&#39;</span><span class="p">,</span> <span class="s">&#39;price_1&#39;</span><span class="p">:</span> <span class="s">&#39;15&#39;</span><span class="p">},</span> <span class="n">queryset</span><span class="o">=</span><span class="n">qs</span><span class="p">)</span>
+
+<span class="c"># Min-Only: Books costing more the 11€</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">F</span><span class="p">({</span><span class="s">&#39;price_0&#39;</span><span class="p">:</span> <span class="s">&#39;11&#39;</span><span class="p">},</span> <span class="n">queryset</span><span class="o">=</span><span class="n">qs</span><span class="p">)</span>
+
+<span class="c"># Max-Only: Books costing less than 19€</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">F</span><span class="p">({</span><span class="s">&#39;price_1&#39;</span><span class="p">:</span> <span class="s">&#39;19&#39;</span><span class="p">},</span> <span class="n">queryset</span><span class="o">=</span><span class="n">qs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="daterangefilter">
+<h3><tt class="docutils literal"><span class="pre">DateRangeFilter</span></tt><a class="headerlink" href="#daterangefilter" title="Permalink to this headline">¶</a></h3>
+<p>Filter similar to the admin changelist date one, it has a number of common
+selections for working with date fields.</p>
+</div>
+<div class="section" id="allvaluesfilter">
+<h3><tt class="docutils literal"><span class="pre">AllValuesFilter</span></tt><a class="headerlink" href="#allvaluesfilter" title="Permalink to this headline">¶</a></h3>
+<p>This is a <tt class="docutils literal"><span class="pre">ChoiceFilter</span></tt> whose choices are the current values in the
+database.  So if in the DB for the given field you have values of 5, 7, and 9
+each of those is present as an option.  This is similar to the default behavior
+of the admin.</p>
+</div>
+<div class="section" id="methodfilter">
+<h3><tt class="docutils literal"><span class="pre">MethodFilter</span></tt><a class="headerlink" href="#methodfilter" title="Permalink to this headline">¶</a></h3>
+<p>This is a <tt class="docutils literal"><span class="pre">Filter</span></tt> that will allow you to run a method that exists on the filter set that
+this filter is a property of. Set the <cite>action</cite> to a string that will map to a method on the
+filter set class.</p>
+</div>
+</div>
+<div class="section" id="core-arguments">
+<h2>Core Arguments<a class="headerlink" href="#core-arguments" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="name">
+<h3><tt class="docutils literal"><span class="pre">name</span></tt><a class="headerlink" href="#name" title="Permalink to this headline">¶</a></h3>
+<p>The name of the field this filter is supposed to filter on, if this is not
+provided it automatically becomes the filter&#8217;s name on the <tt class="docutils literal"><span class="pre">FilterSet</span></tt>.</p>
+</div>
+<div class="section" id="label">
+<h3><tt class="docutils literal"><span class="pre">label</span></tt><a class="headerlink" href="#label" title="Permalink to this headline">¶</a></h3>
+<p>The label as it will apear in the HTML, analogous to a form field&#8217;s label
+argument.</p>
+</div>
+<div class="section" id="widget">
+<h3><tt class="docutils literal"><span class="pre">widget</span></tt><a class="headerlink" href="#widget" title="Permalink to this headline">¶</a></h3>
+<p>The django.form Widget class which will represent the <tt class="docutils literal"><span class="pre">Filter</span></tt>.  In addition
+to the widgets that are included with Django that you can use there are
+additional ones that django-filter provides which may be useful:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">django_filters.widgets.LinkWidget</span></tt> &#8211; this displays the options in a
+mannner similar to the way the Django Admin does, as a series of links.
+The link for the selected option will have <tt class="docutils literal"><span class="pre">class=&quot;selected&quot;</span></tt>.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="action">
+<h3><tt class="docutils literal"><span class="pre">action</span></tt><a class="headerlink" href="#action" title="Permalink to this headline">¶</a></h3>
+<p>An optional callable that tells the filter how to handle the queryset.  It
+recieves a <tt class="docutils literal"><span class="pre">QuerySet</span></tt> and the value to filter on and should return a
+<tt class="docutils literal"><span class="pre">Queryset</span></tt> that is filtered appropriately.</p>
+</div>
+<div class="section" id="lookup-type">
+<h3><tt class="docutils literal"><span class="pre">lookup_type</span></tt><a class="headerlink" href="#lookup-type" title="Permalink to this headline">¶</a></h3>
+<p>The type of lookup that should be performed using the [Django ORM](<a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/models/querysets/#field-lookups">https://docs.djangoproject.com/en/dev/ref/models/querysets/#field-lookups</a> &#8220;Django&#8217;s ORM Lookups&#8221;).
+All the normal options are allowed, and should be provided as a string.  You can also
+provide either <tt class="docutils literal"><span class="pre">None</span></tt> or a <tt class="docutils literal"><span class="pre">list</span></tt> or a <tt class="docutils literal"><span class="pre">tuple</span></tt>.  If <tt class="docutils literal"><span class="pre">None</span></tt> is provided,
+then the user can select the lookup type from all the ones available in the Django
+ORM.  If a <tt class="docutils literal"><span class="pre">list</span></tt> or <tt class="docutils literal"><span class="pre">tuple</span></tt> is provided, then the user can select from those
+options.</p>
+</div>
+<div class="section" id="distinct">
+<h3><tt class="docutils literal"><span class="pre">distinct</span></tt><a class="headerlink" href="#distinct" title="Permalink to this headline">¶</a></h3>
+<p>A boolean value that specifies whether the Filter will use distinct on the
+queryset. This option can be used to eliminate duplicate results when using filters that span related models. Defaults to <tt class="docutils literal"><span class="pre">False</span></tt>.</p>
+</div>
+<div class="section" id="exclude">
+<h3><tt class="docutils literal"><span class="pre">exclude</span></tt><a class="headerlink" href="#exclude" title="Permalink to this headline">¶</a></h3>
+<p>A boolean value that specifies whether the Filter should use <tt class="docutils literal"><span class="pre">filter</span></tt> or <tt class="docutils literal"><span class="pre">exclude</span></tt> on the queryset.
+Defaults to <tt class="docutils literal"><span class="pre">False</span></tt>.</p>
+</div>
+<div class="section" id="kwargs">
+<h3><tt class="docutils literal"><span class="pre">**kwargs</span></tt><a class="headerlink" href="#kwargs" title="Permalink to this headline">¶</a></h3>
+<p>Any extra keyword arguments will be provided to the accompanying form Field.
+This can be used to provide arguments like <tt class="docutils literal"><span class="pre">choices</span></tt> or <tt class="docutils literal"><span class="pre">queryset</span></tt>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Filter Reference</a><ul>
+<li><a class="reference internal" href="#filters">Filters</a><ul>
+<li><a class="reference internal" href="#charfilter"><tt class="docutils literal"><span class="pre">CharFilter</span></tt></a></li>
+<li><a class="reference internal" href="#booleanfilter"><tt class="docutils literal"><span class="pre">BooleanFilter</span></tt></a></li>
+<li><a class="reference internal" href="#choicefilter"><tt class="docutils literal"><span class="pre">ChoiceFilter</span></tt></a></li>
+<li><a class="reference internal" href="#typedchoicefilter"><tt class="docutils literal"><span class="pre">TypedChoiceFilter</span></tt></a></li>
+<li><a class="reference internal" href="#multiplechoicefilter"><tt class="docutils literal"><span class="pre">MultipleChoiceFilter</span></tt></a></li>
+<li><a class="reference internal" href="#datefilter"><tt class="docutils literal"><span class="pre">DateFilter</span></tt></a></li>
+<li><a class="reference internal" href="#datetimefilter"><tt class="docutils literal"><span class="pre">DateTimeFilter</span></tt></a></li>
+<li><a class="reference internal" href="#timefilter"><tt class="docutils literal"><span class="pre">TimeFilter</span></tt></a></li>
+<li><a class="reference internal" href="#modelchoicefilter"><tt class="docutils literal"><span class="pre">ModelChoiceFilter</span></tt></a></li>
+<li><a class="reference internal" href="#modelmultiplechoicefilter"><tt class="docutils literal"><span class="pre">ModelMultipleChoiceFilter</span></tt></a></li>
+<li><a class="reference internal" href="#numberfilter"><tt class="docutils literal"><span class="pre">NumberFilter</span></tt></a></li>
+<li><a class="reference internal" href="#rangefilter"><tt class="docutils literal"><span class="pre">RangeFilter</span></tt></a></li>
+<li><a class="reference internal" href="#daterangefilter"><tt class="docutils literal"><span class="pre">DateRangeFilter</span></tt></a></li>
+<li><a class="reference internal" href="#allvaluesfilter"><tt class="docutils literal"><span class="pre">AllValuesFilter</span></tt></a></li>
+<li><a class="reference internal" href="#methodfilter"><tt class="docutils literal"><span class="pre">MethodFilter</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#core-arguments">Core Arguments</a><ul>
+<li><a class="reference internal" href="#name"><tt class="docutils literal"><span class="pre">name</span></tt></a></li>
+<li><a class="reference internal" href="#label"><tt class="docutils literal"><span class="pre">label</span></tt></a></li>
+<li><a class="reference internal" href="#widget"><tt class="docutils literal"><span class="pre">widget</span></tt></a></li>
+<li><a class="reference internal" href="#action"><tt class="docutils literal"><span class="pre">action</span></tt></a></li>
+<li><a class="reference internal" href="#lookup-type"><tt class="docutils literal"><span class="pre">lookup_type</span></tt></a></li>
+<li><a class="reference internal" href="#distinct"><tt class="docutils literal"><span class="pre">distinct</span></tt></a></li>
+<li><a class="reference internal" href="#exclude"><tt class="docutils literal"><span class="pre">exclude</span></tt></a></li>
+<li><a class="reference internal" href="#kwargs"><tt class="docutils literal"><span class="pre">**kwargs</span></tt></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../usage.html"
+                        title="previous chapter">Using django-filter</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="widgets.html"
+                        title="next chapter">Widget Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/ref/filters.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="widgets.html" title="Widget Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../usage.html" title="Using django-filter"
+             >previous</a> |</li>
+        <li><a href="../index.html">django-filter 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Alex Gaynor and others..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

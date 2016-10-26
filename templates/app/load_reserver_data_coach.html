@@ -1,0 +1,130 @@
+{% load config_tags %}
+{% if list_data %}
+    {% for key_outer,val_outer in list_data.items %}
+        <div class="list-block coach-data-list">
+            <div class="list-group">
+                <ul>
+                    <li class="list-group-title">
+                        {% if val_outer.train_date == val_outer.today %}
+                            <span class="color-blue">今天</span>
+                        {% elif val_outer.train_date == val_outer.tomorrow %}
+                            <span class="color-gray">明天</span>
+                        {% endif %}
+                        {{ val_outer.train_date | date:"Y-m-d D" }}
+                    </li>
+
+                    {% for reserve in val_outer.user_reservers %}
+                        <li>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">
+                                        {{ reserve.train_time_span_start_time | date:"H:i" }}-{{ reserve.train_time_span_end_time | date:"H:i" }}
+                                        <span class="color-gray">({{ reserve.train_time_span_name }})</span>
+                                    </div>
+                                    <div class="item-after">
+                                    </div>
+                                </div>
+                            </div>
+                            <ul>
+                                <li class="show-reserve-detail">
+                                        <div class="item-content item-link">
+                                            <div class="item-inner">
+                                                <div class=student-name>
+                                                    {{ reserve.user.name }}
+                                                </div>
+                                                <div class="item-title">
+                                                    {{ reserve.user.mobile }}
+                                                </div>
+                                                <div class="item-after">
+                                                    <span class="button button-round external {% if reserve.train_date <= val_outer.today and reserve.sign_status == 0 %} do-actions {% if reserve.sign_status == 1 %}color-blue{% elif reserve.sign_status == -1 %} color-red{% endif %} {% else %} color-gray {% endif %}"
+                                                          id="{{ reserve.id }}" href="javascript:;">
+                                                        {% if reserve.sign_status == 1 %}
+                                                            已到{% elif reserve.sign_status == -1 %}未到{% else %}
+                                                            签到{% endif %}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="display: none" data-block="detail">
+                                            <div class="list-block">
+                                                <ul>
+                                                    <li>
+                                                        <div class="item-content">
+                                                            <div class="item-inner">
+                                                                <div>
+                                                                    学员名称：{{ reserve.user.name }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="item-content">
+                                                            <div class="item-inner">
+                                                                <div>
+                                                                    科目状态：{{ reserve.user.get_exam_stage_display }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="item-content">
+                                                            <div class="item-inner">
+                                                                时间：
+                                                                {{ reserve.train_date | date:"Y-m-d" }}
+                                                                {{ reserve.train_time_span_start_time | date:"H:i" }}-{{ reserve.train_time_span_end_time | date:"H:i" }}
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="item-content">
+                                                            <div class="item-inner">
+                                                                <div>
+                                                                    预约状态：<span
+                                                                        class="color-red">{{ reserve.get_audit_status_display|striptags }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="item-content">
+                                                            <div class="item-inner">
+                                                                车牌号：{{ reserve.coach_car_license }}</div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="item-content">
+                                                            <div class="item-inner">
+                                                                电话：{{ reserve.user.mobile }}</div>
+                                                        </div>
+                                                    </li>
+
+                                                    <li>
+                                                        <div class="item-content">
+                                                            <div class="item-inner">
+                                                                场地：{{ reserve.training_place_name }}</div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="item-content">
+                                                            <div class="item-inner">
+                                                                详细地址：{{ reserve.user.coach_car.training_place.address }}</div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="item-content">
+                                                            <div class="item-inner">备注：{% if reserve.remarks %}
+                                                                {{ reserve.remarks }}{% else %}无{% endif %}</div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

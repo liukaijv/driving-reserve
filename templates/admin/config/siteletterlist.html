@@ -1,0 +1,115 @@
+{% extends "admin/_base.html" %}
+{% load pagination_tags %}
+{% block title %}站内消息模板列表{% endblock %}
+
+{% block content %}
+    <div class="container-fluid paper-wrap bevel tlbr">
+        <!-- CONTENT -->
+        <!--TITLE -->
+        <div class="row">
+            <div id="paper-top">
+                <div class="col-sm-3">
+                    <h2 class="tittle-content-header">
+                        <i class="icon-media-record"></i>
+                        <span>站内消息模板</span>
+                    </h2>
+                </div>
+                <div class="col-sm-7">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="tittle-middle-header">
+                        <div class="alert">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="btn-group btn-wigdet pull-right visible-lg">
+                        <div class="btn" data-toggle="dropdown">操作</div>
+                        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul role="menu" class="dropdown-menu">
+                            <li>
+                                <a href="{% url 'add_siteletter_url' %}">
+                                    <span class="entypo-plus-circled margin-iconic"></span>添加模板</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ TITLE -->
+        <!-- BREADCRUMB -->
+        <ul id="breadcrumb">
+            <li>
+                <span class="entypo-home"></span>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="系统管理">系统管理</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="站内消息模板">站内消息模板</a>
+            </li>
+        </ul>
+        <!-- END OF BREADCRUMB -->
+        <div class="content-wrap">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- BLANK PAGE-->
+                    <div class="nest" id="tableStaticClose">
+                        <div class="body-nest" id="tableStatic">
+                            <section id="flip-scroll">
+                                <table class="table table-bordered table-striped cf">
+                                    <thead class="cf">
+                                    <tr>
+                                        <th>模板类型</th>
+                                        <th>模板内容</th>
+                                        <th class="text-center">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% autopaginate site_letter_list 15 %}
+                                    {% for item in site_letter_list %}
+                                        <tr>
+                                            <td {% if item.is_system %}style="background-color: #ffcdd3" {% endif %}>{{ item.message_title }}</td>
+
+                                            <td>{{ item.message_content }}</td>
+                                            <td class="text-center">
+                                                <a href="{% url 'modify_siteletter_url' item.id %}"
+                                                   class="btn btn-default ajax-load">
+                                                    <span class="entypo-pencil"></span>&nbsp;&nbsp;编辑
+                                                </a>
+                                                <a href="{% url 'send_page_url' item.id %}" class="btn btn-success">
+                                                    <span class="entypo-paper-plane"></span>&nbsp;&nbsp;发送
+                                                </a>
+                                                {% if not item.is_system %}
+                                                    <a href="{% url 'delete_smstemplate_url' item.id %}"
+                                                       class="btn btn-info del-item">
+                                                        <span class="entypo-trash"></span>&nbsp;&nbsp;删除
+                                                    </a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                    {% paginate %}
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <!-- END OF BLANK PAGE -->
+            </div>
+            <!-- /END OF CONTENT -->
+            {% include 'admin/_foot.html' %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,40 @@
+<div id="loadedData" style="display: none;">
+<div id="examCount" style="display: none;">{{ exam_count }}</div>
+<div id="reverseCount" style="display: none;">{{ verify_count }}</div>
+<div id="msgCount" style="display: none;">{{ msg_count }}</div>
+<div id="blacklistCount" style="display: none;">{{ black_list_count }}</div>
+{% if all_list %}
+    <div id="msgOne">
+        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+            <i style="font-size:20px;" class="icon-conversation"></i>
+
+            <div class="noft-red" id="notice-count">{{ sum_count }}</div>
+        </a>
+        <ul style="margin: 11px 0 0 9px;" role="menu" class="dropdown-menu dropdown-wrap dropdown-notice">
+            {% for item in  data_list %}
+                <li>
+                    <a href="{% url 'details_reserve_url' item.id %}" class="ajax-load">
+                        {{ item.user.name }}的学车
+                        {{ item.train_date | date:"Y-m-d" }}
+                        {{ item.train_time_span.name }}
+{#                        <b class="cancle-notice" data-id="{{ item.id }}">不再提醒 </b>#}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+{% if data_list %}
+    <div id="msgTwo">
+        {% for item in  data_list %}
+            <li data-id="{{ item.id }}">
+                 <a href="{% url 'details_reserve_url' item.id %}" class="ajax-load">
+                        {{ item.user.name }}的学车
+                        {{ item.train_date | date:"Y-m-d" }}
+                        {{ item.train_time_span.name }}
+                    </a>
+            </li>
+        {% endfor %}
+    </div>
+{% endif %}
+</div>

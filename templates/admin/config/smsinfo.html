@@ -1,0 +1,109 @@
+{% extends "admin/_base.html" %}
+{% block title %}短信提供商信息{% endblock %}
+{% block content %}
+<div class="container-fluid paper-wrap bevel tlbr">
+    <!-- CONTENT -->
+    <!--TITLE -->
+    <div class="row">
+        <div id="paper-top">
+            <div class="col-sm-3">
+                <h2 class="tittle-content-header">
+                    <i class="icon-media-record"></i>
+                    <span>短信接口信息</span>
+                </h2>
+            </div>
+            <div class="col-sm-7">
+                <div class="devider-vertical visible-lg"></div>
+                <div class="tittle-middle-header">
+                    <div class="alert">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ TITLE -->
+
+    <div class="content-wrap">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- BLANK PAGE-->
+                <div class="nest" id="horizontalClose">
+                    <div class="title-alt">
+                        <h6>短信接口信息</h6>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#horizontal">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="body-nest" id="horizontal">
+
+                         <table class="user-view-table">
+                                <tr>
+                                    <th width="150">短信提供商：</th>
+                                    <td>{{company}}</td>
+                                    <th width="150">售后电话：</th>
+                                    <td>{{ service_tel }}</td>
+                                </tr>
+                              <tr>
+                                    <th width="150">短信密码：</th>
+                                    <td>{{password}}</td>
+                                    <th width="150">短信余额：</th>
+                                    <td>{{ balance }}</td>
+                                </tr>
+                            </table>
+
+
+                    </div>
+                </div>
+                <!-- END OF BLANK PAGE -->
+            </div>
+        </div>
+
+        <!-- /END OF CONTENT -->
+        {% include 'admin/_foot.html' %}
+    </div>
+</div>
+        <style>
+        .user-view-table {
+            width: 100%;
+        }
+
+        .user-view-table th,
+        .user-view-table td {
+            padding: 10px !important;
+            border: 1px solid #eee !important;
+        }
+
+        .user-view-table th {
+            background: #f9f9f9;
+            font-weight: normal;
+        }
+
+        .user-view-table td {
+            color: #666;
+        }
+
+        .form-block {
+            padding: 30px 20px 0;
+            width: 70%;
+        }
+
+        .form-block .control-label {
+            font-weight: normal;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+    </style>
+{% endblock %}
+

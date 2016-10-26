@@ -1,0 +1,225 @@
+{% extends "admin/_base.html" %}
+{% block title %}短信模板-添加{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'js/button/ladda/ladda.min.css' %}">
+<style type="text/css">
+    .button-demo, .progress-demo {
+        display: inline-block;
+        margin-right: 3px;
+        margin-bottom: 20px;
+    }
+
+    .msg-send-box {
+        margin-top: 20px;
+    }
+
+    .select-box {
+        float: left;
+    }
+
+    .select-box select {
+        width: 290px;
+        height: 200px;
+        border: 1px solid #ddd;
+        padding: 4px;
+    }
+
+    .select-action {
+        float: left;
+        margin-top: 70px;
+    }
+
+    .select-action p {
+        cursor: pointer;
+        margin: 10px;
+        border: 1px solid #ddd;
+        padding: 4px 14px;
+    }
+</style>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/button/ladda/spin.min.js' %}"></script>
+<script src="{% static 'js/button/ladda/ladda.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $("#search").click(function () {
+            $.get("{% url 'list_user_url' %}", function (data) {
+                console.log(data);
+                $("#userForm").html(data);
+            });
+        });
+    });
+</script>
+<script>
+            var leftSelect = $("#select-left");
+            var rightSelect = $("#select-right");
+            $("#action-add").on("click", function () {
+                leftSelect.find("option:selected").each(function () {
+                    $(this).remove().appendTo(rightSelect);
+                });
+            });
+            $("#action-del").on("click", function () {
+                rightSelect.find("option:selected").each(function () {
+                    $(this).remove().appendTo(leftSelect);
+                });
+            });
+            leftSelect.dblclick(function () {
+                $(this).find("option:selected").each(function () {
+                    $(this).remove().appendTo(rightSelect);
+                });
+            });
+            rightSelect.dblclick(function () {
+                $(this).find("option:selected").each(function () {
+                    $(this).remove().appendTo(leftSelect);
+                });
+            });
+
+            $(document).ready(function () {
+
+                // Bind progress buttons and simulate loading progress
+                Ladda.bind('.progress-demo button', {
+                    callback: function (instance) {
+                        var progress = 0;
+                        var interval = setInterval(function () {
+                            progress = Math.min(progress + Math.random() * 0.1, 1);
+                            instance.setProgress(progress);
+
+                            if (progress === 1) {
+                                instance.stop();
+                                clearInterval(interval);
+                            }
+                        }, 200);
+                    }
+                });
+            });
+            // Bind normal buttons
+
+            // You can control loading explicitly using the JavaScript API
+            // as outlined below:
+
+            // var l = Ladda.create( document.querySelector( 'button' ) );
+            // l.start();
+            // l.stop();
+            // l.toggle();
+            // l.isLoading();
+            // l.setProgress( 0-1 );
+
+        </script>
+{% endblock %}
+{% block content %}
+<div class="container-fluid paper-wrap bevel tlbr">
+    <!-- CONTENT -->
+    <!--TITLE -->
+    <div class="row">
+        <div id="paper-top">
+            <div class="col-sm-3">
+                <h2 class="tittle-content-header">
+                    <i class="icon-media-record"></i>
+                    <span>发送消息</span>
+                </h2>
+            </div>
+            <div class="col-sm-7">
+                <div class="devider-vertical visible-lg"></div>
+                <div class="tittle-middle-header">
+                    <div class="alert">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ TITLE -->
+    <!-- BREADCRUMB -->
+    <ul id="breadcrumb">
+        <li>
+            <span class="entypo-home"></span>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="#" title="系统管理">系统管理</a>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="#" title="信息中心">信息中心</a>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="#" title="发送消息">发送消息</a>
+        </li>
+    </ul>
+    <!-- END OF BREADCRUMB -->
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="nest" id="inlineClose">
+                    <div class="title-alt">
+                        <h6>
+                            Inline form</h6>
+
+                        <div class="titleClose">
+                            <a class="gone" href="#inlineClose">
+                                <span class="entypo-cancel"></span>
+                            </a>
+                        </div>
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#inline">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+
+                    </div>
+
+                    <div class="body-nest" id="inline">
+
+                        <div class="form_center">
+                            <form role="form" class="form-inline">
+                                <div class="form-group">
+                                    <label for="name">名字：</label>
+                                    <input type="email" id="name"
+                                           class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mobile">手机号：</label>
+                                    <input type="password" id="mobile"
+                                           class="form-control">
+                                </div>
+                                <button id="search" class="btn btn-success" type="button">搜索</button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- BLANK PAGE-->
+                <div class="nest" id="tableStaticClose">
+                    <div class="body-nest" id="validation">
+                        <div class="form_center">
+                            <form id="userForm" action="" class="form-horizontal" method="post" novalidate="novalidate">
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF BLANK PAGE -->
+        </div>
+        <!-- /END OF CONTENT -->
+        {% include 'admin/_foot.html' %}
+    </div>
+</div>
+{% endblock %}
+
+
+

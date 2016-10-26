@@ -1,0 +1,56 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.analog {
+	  border: 2px solid #9EA7B3;
+    border-radius: 50%;
+    float: left;
+    height: 24px !important;
+    list-style: none outside none;
+    margin: -1px 7px 0 -9px;
+    position: relative;
+    width: 24px;
+}
+
+.analog,.analog .hour,.analog .min,.analog .sec {
+	height: 150px;
+}
+
+.analog .hour,.analog .min,.analog .sec {
+	  left: 6px;
+    padding: 0;
+    position: absolute;
+    top: -65px;
+    width: 8px;
+}
+
+.analog .sec {
+	background: url(sechand.png);
+	z-index: 3;
+}
+
+.analog .min {
+	background: url(minhand.png);
+	z-index: 2;
+}
+
+.analog .hour {
+	background: url(hourhand.png);
+	z-index: 1;
+}
+
+.title {
+	font-size: 11px;
+	font-weight: bold;
+	color: #333;
+}
+
+.analog .meridiem {
+	margin-top: 90px;
+	font-size: 11px;
+	font-weight: bold;
+	color: #333333;
+  display: none;
+}

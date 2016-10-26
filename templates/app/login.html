@@ -1,0 +1,61 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% block title %}用户登陆{% endblock %}
+{% block body %}
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="center sliding center-title">森安驾校</div>
+        </div>
+    </div>
+
+    <div class="pages navbar-through">
+
+        <div data-page="login" class="page no-toolbar no-swipeback">
+
+            <div class="page-content">
+
+                <div class="content-block">
+                    <div class="logo">森安驾校</div>
+                </div>
+
+                <form action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+                    <div class="content-block login-input-content">
+                        <div class="list-block">
+                            {{ form.username }}
+                            {{ form.password }}
+                        </div>
+                    </div>
+
+                    <div class="content-block login-btn-content">
+                        <input type="submit" class="button button-big button-fill" value="登陆">
+                    </div>
+                </form>
+
+                <div class="content-block copyright">
+                    <a href="{% url 'forget_password' %}" class="external">忘记密码？</a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        {% if form.errors %}
+            {% for key, val in form.errors.items %}
+                App.addNotification({
+                    title: '错误提醒！',
+                    message: '{{ val | striptags }}',
+                    additionalClass: 'errors-notifications',
+                    closeIcon: false,
+                    onClick: function () {
+                        App.closeNotification('.errors-notifications');
+                    }
+                });
+            {% endfor %}
+        {% endif %}
+    </script>
+{% endblock %}

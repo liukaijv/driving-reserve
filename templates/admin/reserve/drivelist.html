@@ -1,0 +1,171 @@
+{% extends "admin/_base.html" %}
+{% load pagination_tags %}
+{% block title %}预约练车列表{% endblock %}
+{% block content %}
+<div class="container-fluid paper-wrap bevel tlbr">
+    <!-- CONTENT -->
+    <!--TITLE -->
+    <div class="row">
+        <div id="paper-top">
+            <div class="col-sm-3">
+                <h2 class="tittle-content-header">
+                    <i class="icon-media-record"></i>
+                    <span>预约练车列表</span>
+                </h2>
+            </div>
+            <div class="col-sm-7">
+                <div class="devider-vertical visible-lg"></div>
+                <div class="tittle-middle-header">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}  alert-dismissable">
+                        <a class="panel-close close" data-dismiss="alert">×</a>
+                        <i class="fa fa-coffee"></i>
+                        <strong>{{ message }}</strong>。
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="devider-vertical visible-lg"></div>
+                <div class="btn-group btn-wigdet pull-right visible-lg">
+                    <div class="btn" data-toggle="dropdown">操作</div>
+                    <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul role="menu" class="dropdown-menu">
+                        <li>
+                            <a href="{% url 'add_drive_reserve_url' %}">
+                                <span class="entypo-plus-circled margin-iconic"></span>添加约车</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'batch_delete_drive_url' %}" onclick="return reserve.batch_delete(this);">
+                                <span class="entypo-heart margin-iconic"></span>批量删除</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'batch_audit_drive_url' %}" onclick="return reserve.batch_audit(this);">
+                                <span class="entypo-cog margin-iconic"></span>批量审核</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ TITLE -->
+    <!-- BREADCRUMB -->
+    <ul id="breadcrumb">
+        <li>
+            <span class="entypo-home"></span>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="#" title="预约管理">预约管理</a>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{% url 'list_drive_reserve_url' %}" title="预约练车列表">预约练车列表</a>
+        </li>
+        <li class="pull-right">
+            <div class="input-widget">
+                <button class="btn btn-primary" id="showSearch" type="button">
+                    <span class="entypo-search"></span>
+                    高级搜索
+                </button>
+            </div>
+        </li>
+    </ul>
+    <!-- END OF BREADCRUMB -->
+    <div class="content-wrap">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- BLANK PAGE-->
+                <div class="nest" id="tableStaticClose">
+                    <div class="body-nest" id="tableStatic">
+                        <section id="flip-scroll">
+                            <table class="table table-bordered table-striped cf">
+                                <thead class="cf">
+                                <tr>
+                                    <th class="text-center">
+                                        <input type="checkbox" data-role="check-all">
+                                        <input type="hidden" class="checkedids" value="">
+                                    </th>
+                                    <th>姓名</th>
+                                    <th>手机</th>
+                                    <th data-hide="phone,tablet">学车阶段</th>
+                                    <th>预约时间</th>
+                                    <th>车牌号</th>
+                                    <th>教练</th>
+                                    <th>预约方式</th>
+                                    <th>状态</th>
+                                    <th class="text-center" style="width:230px">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% autopaginate drive_reserve_list 15 %}
+                                {% for item in drive_reserve_list %}
+                                {% with user=item.user %}
+                                <tr>
+                                    <td class="text-center">
+                                        <input type="checkbox" class="checkbox" value="{{ item.id}}">
+                                    </td>
+                                    <td>{{ user.name }}</td>
+                                    <td>{{ user.mobile }}</td>
+                                    <td>{{ user.get_exam_stage_display }}</td>
+                                    <td>
+                                        {{ item.train_date|date:'c' }}
+                                        &nbsp;<span class="text-info">{{ item.train_time_span_name  }}</span>
+                                    </td>
+                                    <td>{{ item.coach_car_license }}</td>
+                                    <td>
+                                        {{ item.coach_name }}
+                                    </td>
+                                    <td>{{ item.get_is_admin_reserve_display }}</td>
+                                    <td>
+                                        {{ item.get_audit_status_display | safe }}
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{% url 'details_reserve_url' item.id %}"
+                                           class="btn btn-primary ajax-load">
+                                            <span class="entypo-search"></span>&nbsp;&nbsp;查看
+                                        </a>
+                                        <a href="{% url 'delete_drive_reserve_url' item.id %}"
+                                           class="btn btn-info del-item">
+                                            <span class="entypo-trash"></span>&nbsp;&nbsp;删除
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endwith %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            {% paginate %}
+                        </section>
+                    </div>
+
+                </div>
+            </div>
+            <!-- END OF BLANK PAGE -->
+        </div>
+        <!-- /END OF CONTENT -->
+        {% include 'admin/_foot.html' %}
+    </div>
+</div>
+
+<div class="search-box" id="searchBox">
+    <form class="search-form" style="padding: 20px;" action="{% url 'list_drive_reserve_url' %}" method="get">
+        {% for obj in filter.form %}
+        <div class="control-group">
+            <div class="search-label">{{ obj.field.label }}:</div>
+            {{ obj }}
+        </div>
+        {% endfor %}
+        <div class="form-actions text-right">
+            <button type="submit" class="btn btn-primary">确定搜索</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

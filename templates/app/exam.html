@@ -1,0 +1,110 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% block title %}考试申请{% endblock %}
+{% block body %}
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="left">
+                <a href="javascript:;" onclick="window.history.go(-1);" class="link icon-only">
+                    <i class="icon icon-back"></i>
+                </a>
+            </div>
+            <div class="center sliding">考试申请</div>
+            <div class="right">
+            </div>
+        </div>
+    </div>
+
+    <div class="pages navbar-through">
+
+        <div data-page="exam" class="page no-toolbar no-swipeback">
+
+            <div class="page-content">
+
+                <form action="{% url 'exam' %}" method="post">
+                    {% csrf_token %}
+                    <div class="content-block-title">考试科目</div>
+                    <div class="list-block">
+                        <ul>
+                            {% for key,val in aviable_stage %}
+                                <li>
+                                    <label class="label-checkbox item-content">
+                                        <input type="radio" name="exam_stage" value="{{ key }}"
+                                               {% if forloop.first %}checked{% endif %}>
+
+                                        <div class="item-media"><i class="icon icon-form-checkbox"></i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">{{ val }}</div>
+                                        </div>
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="content-block-title">备注信息</div>
+                    <div class="list-block">
+                        <ul>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-input">
+                                            {{ form.remarks }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="content-block">
+                        <input type="submit" class="button button-big button-fill" value="提交申请">
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+        {% if messages %}
+            {% for message in messages %}
+                App.addNotification({
+                    title: '操作提醒！',
+                    message: '{{ message }}',
+                    additionalClass: 'operation-notifications',
+                    closeIcon: false,
+                    hold: 3000,
+                    onClick: function () {
+                        App.closeNotification('.operation-notifications');
+                    },
+                    onClose: function () {
+                        window.location.href = '/app/student_profile/';
+                    }
+                });
+            {% endfor %}
+        {% endif %}
+
+        {% if form.errors %}
+            {% for key, val in form.errors.items %}
+                App.addNotification({
+                    title: '错误提醒！',
+                    message: '{{ val | striptags }}',
+                    additionalClass: 'errors-notifications',
+                    closeIcon: false,
+                    onClick: function () {
+                        App.closeNotification('.errors-notifications');
+                    }
+                });
+            {% endfor %}
+        {% endif %}
+    </script>
+{% endblock %}

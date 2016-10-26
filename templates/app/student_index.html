@@ -1,0 +1,185 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% block title %}学员中心{% endblock %}
+{% block body %}
+
+    <div class="pages">
+
+        <div data-page="index" class="page no-toolbar no-swipeback">
+
+            <div class="page-content infinite-scroll" data-distance="50" data-url="/app/load_reserver_data_student/">
+
+                <div class="pull-to-refresh-layer">
+                    <div class="preloader"></div>
+                    <div class="pull-to-refresh-arrow"></div>
+                </div>
+
+                <div class="index-top-bg">
+                    <img src="{% static 'images/sample_02.jpg' %}">
+                    <a class="more-ellipsis open-popover link" href="#">
+                        <i class="fa fa-ellipsis-v"></i>
+                        {% if message_count > 0 %}<span class="msg-label">{{ message_count }}</span>{% endif %}
+                    </a>
+                </div>
+
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <img src="{% static 'images/avatar/avatar03.jpg' %}">
+                    </div>
+                    <div class="user-info-body">
+                        <ul>
+                            <li class="subject">
+                                {{ user.get_exam_stage_display }}
+                                <div class="user-info-name">
+                                    {{ user.name }}
+                                </div>
+                            </li>
+                            <li>{{ reserve_count }}<br>学车次数</li>
+                            <li>{{ user.not_arrival_count }}<br>爽约次数</li>
+                        </ul>
+                    </div>
+                </div>
+
+                {% if user.exam_stage >= 2 and user.exam_stage < 4 %}
+
+                    <div class="content-block">
+                        <a href="{% url 'reserver' %}"
+                           class="external button reverse-button button-big button-fill {% if disable_reverse or is_blacklist %}disabled{% endif %}">我要约车</a>
+                    </div>
+
+                {% if exam_list %}
+                    <div class="content-block-title">
+                        申请考试记录
+                    </div>
+
+                    <div class="list-block">
+						<ul>
+                            {% for exam in exam_list %}
+                                <li class="list-group-title">{{ exam.create_time|date:"Y-m-d H:s" }}</li>
+                            <li>
+                                <div class="item-content">
+	                                <div class="item-inner">
+	                                    <div class="item-title">
+                                            {{ exam.get_exam_stage_display }}
+                                        </div>
+	                                    <div class="item-after">
+                                            <span class="badge {% if exam.audit_status == 1 %} bg-blue{% elif exam.audit_status %} == 0 %} bg-green{% else %}  bg-red{% endif %}">{{ exam.get_audit_status_display|striptags }}</span>
+                                        </div>
+	                                </div>
+	                            </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                    <div class="content-block-title">
+                        预约信息记录
+                    </div>
+
+                    <div class="infinite-block">
+
+                    </div>
+
+                    <div class="infinite-scroll-preloader">
+                        <div class="preloader"></div>
+                    </div>
+                {% elif user.exam_stage == 1 %}
+                    <div class="content-block">
+                        亲，加油哦，只有通过科目一考试才可以预约学车！
+                    </div>
+                {% elif user.exam_stage == 4 %}
+
+                {% else %}
+                    <div class="content-block">
+                        恭喜恭喜，您已经毕业了！
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block extra_page %}
+
+    <div class="popover popover-menu">
+        <div class="popover-angle"></div>
+        <div class="popover-inner">
+            <div class="list-block">
+                <ul>
+                    {% if user.exam_stage >= 2 and user.exam_stage < 4 %}
+                        <li>
+                            <a class="list-button item-link external" href="{% url 'reserver' %}">预约学车</a>
+                        </li>
+                    {% endif %}
+                    {% if user.exam_stage >= 2 and user.exam_stage < 5 %}
+                        <li>
+                            <a class="list-button item-link external" href="{% url 'exam' %}">申请考试</a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a class="list-button item-link external" href="{% url 'message_list' %}">
+                            {% if message_count > 0 %}
+                                <span class="badge bg-red"
+                                      style="line-height: 1;border-radius: 50%;padding: 2px 5px;">{{ message_count }}</span>
+                            {% endif %}
+                            消息中心
+                        </a>
+                    </li>
+                    <li>
+                        <a class="list-button item-link external" href="{% url 'feedback' %}">建议</a>
+                    </li>
+                    <li>
+                        <a class="list-button item-link external" id="logout" href="{% url 'logout' %}">退出</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        {% if disable_reverse and not  is_blacklist%}
+            App.addNotification({
+                title: '温馨提示！',
+                message: '你在{{ disable_start_time | date:"H:i" }}到{{ disable_end_time | date:"H:i" }}时间内不可约车',
+                additionalClass: 'operation-notifications',
+                closeIcon: false,
+                onClick: function () {
+                    App.closeNotification('.operation-notifications');
+                }
+            });
+        {% endif %}
+        {% if is_blacklist %}
+            App.addNotification({
+                title: '温馨提示！',
+                message: '你的状态正处于黑名单中，需要解除黑名单才能约车',
+                additionalClass: 'operation-notifications',
+                closeIcon: false,
+                onClick: function () {
+                    App.closeNotification('.operation-notifications');
+                }
+            });
+        {% endif %}
+        {% if messages %}
+            {% for message in messages %}
+                App.addNotification({
+                    title: '操作提醒！',
+                    message: '{{ message }}',
+                    additionalClass: 'operation-notifications',
+                    closeIcon: false,
+                    onClick: function () {
+                        App.closeNotification('.operation-notifications');
+                    }
+                });
+            {% endfor %}
+        {% endif %}
+    </script>
+{% endblock %}

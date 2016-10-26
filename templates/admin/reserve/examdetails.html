@@ -1,0 +1,163 @@
+{% extends "admin/_base.html" %}
+{% load config_tags %}
+{% block title %}预约详情{% endblock %}
+{% block content %}
+<div class="container-fluid paper-wrap bevel tlbr">
+    <!-- CONTENT -->
+    <!--TITLE -->
+    <div class="row">
+        <div id="paper-top">
+            <div class="col-sm-3">
+                <h2 class="tittle-content-header">
+                    <i class="icon-media-record"></i>
+                    <span>预约详情</span>
+                </h2>
+            </div>
+            <div class="col-sm-7">
+                <div class="devider-vertical visible-lg"></div>
+                <div class="tittle-middle-header">
+                    <div class="alert">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ TITLE -->
+    <!-- BREADCRUMB -->
+    <ul id="breadcrumb">
+        <li>
+            <span class="entypo-home"></span>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="#" title="预约管理">预约管理</a>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="{% url 'list_exam_url' %}" title="预约考试列表">预约考试列表</a>
+        </li>
+        <li>
+            <i class="fa fa-lg fa-angle-right"></i>
+        </li>
+        <li>
+            <a href="#" title="预约详情">预约详情</a>
+        </li>
+    </ul>
+    <!-- END OF BREADCRUMB -->
+    <div class="content-wrap">
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                <!-- BLANK PAGE-->
+                <div class="nest">
+                    <div class="title-alt">
+                        <h6>学员信息</h6>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#horizontal1">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="body-nest" id="horizontal1">
+
+                        <table class="user-view-table">
+                            <tr>
+                                <th width="150">姓名：</th>
+                                <td width="300">{{ exam.user.name }}</td>
+                                <th width="150">性别：</th>
+                                <td>{{ exam.user.sex }}</td>
+
+                            </tr>
+                            <tr>
+                                <th>报考时间：</th>
+                                <td>{{ exam.user.register_time|date:"c" }}</td>
+                                <th>身份证：</th>
+                                <td>{{ exam.user.id_card }}</td>
+                            </tr>
+                            <tr>
+                                <th>手机号码：</th>
+                                <td>{{ exam.user.mobile }}</td>
+                                <th>学员套餐：</th>
+                                <td>{{ exam.user.category.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>学员等级：</th>
+                                <td>{{ exam.user.train_frequency.name }}</td>
+                                <th>考试阶段：</th>
+                                <td>{{ exam.user.get_exam_stage_display }}</td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+                </div>
+                <!-- END OF BLANK PAGE -->
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                <!-- BLANK PAGE-->
+                <div class="nest">
+                    <div class="title-alt">
+                        <h6>预约信息</h6>
+
+                        <div class="titleToggle">
+                            <a class="nav-toggle-alt" href="#horizontal">
+                                <span class="entypo-up-open"></span>
+                            </a>
+                        </div>
+
+                    </div>
+                    <div class="body-nest" id="horizontal">
+
+                        <table class="user-view-table">
+                            <tr>
+                                <th width="150">预约科目：</th>
+                                <td width="300">{{ exam.get_exam_stage_display }}</td>
+                                <th width="150">申请时间：</th>
+                                <td>{{ exam.create_time|date:"Y-m-d H:i" }}</td>
+                            </tr>
+                            <tr>
+                                <th>备注：</th>
+                                <td colspan="3">
+                                    {{ exam.remarks }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <div class="text-center">
+                                        <input type="hidden" id="reserveid" value="{{ exam.id }}">
+                                        {% if exam.audit_status == 0 %}
+                                        <a href="javascript:;" onclick="exam.refuse()" class="btn btn-danger ">拒绝</a>
+                                        <button class="btn btn-success" onclick="exam.pass()" type="button">审核通过
+                                        </button>
+                                        {% else %}
+                                        {{ exam.get_audit_status_display|safe }}
+                                        ( {{ exam.audit_time | date:'Y-m-d H:i'}} ) &nbsp;&nbsp;&nbsp;
+                                        {% endif %}
+                                        <a class="btn btn-cancel" href="{% url 'list_exam_url' %}">返回</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!-- END OF BLANK PAGE -->
+            </div>
+        </div>
+
+        <!-- /END OF CONTENT -->
+        {% include 'admin/_foot.html' %}
+    </div>
+</div>
+{% endblock %}

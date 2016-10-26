@@ -1,0 +1,98 @@
+{% if reserve_list %}
+    {% for item in reserve_list %}
+        <div class="list-block media-list">
+            <div class="list-group">
+                <ul class="show-reserve-detail" data-id="{{ item.id }}">
+                    <li class="list-group-title">{{ item.train_date | date:"Y-m-d D" }}</li>
+                    <li>
+                        <div class="item-content item-link">
+                            <div class="item-inner">
+                                <div class="item-title-row">
+                                    <div class="item-title">
+                                        {{ item.train_time_span_start_time | date:"H:s" }}-{{ item.train_time_span_end_time | date:"H:s" }}
+                                        <span class="color-gray">({{ item.train_time_span_name }})</span>
+                                    </div>
+                                    <div class="item-after">
+                                        <span class="badge {% if item.audit_status == 1 %} bg-blue{% elif item.audit_status %} == 0 %} bg-green{% else %}  bg-red{% endif %}">{{ item.get_audit_status_display|striptags }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: none" data-block="detail">
+                            <div class="list-block">
+                                <ul>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div>
+                                                    预约科目：
+                                                   {{ item.get_exam_stage_display }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                预约时间：
+                                                {{ item.train_date | date:"Y-m-d" }}
+                                                {{ item.train_time_span_start_time | date:"H:i" }}-{{ item.train_time_span_end_time | date:"H:i" }}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div>
+                                                    预约状态：
+                                                    <span class="color-red">{{ item.get_audit_status_display|striptags }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner"> 教练：{{ item.coach_name }}</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                车牌号：{{ item.coach_car_license }}</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner"> 电话：{{ item.user.mobile }}</div>
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                场地：{{ item.training_place_name }}</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                详细地址：{{ item.user.coach_car.training_place.address }}</div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">备注：{% if item.remarks %}{{ item.remarks }}{% else %}
+                                                无{% endif %}</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    {% endfor %}
+{% endif %}
+

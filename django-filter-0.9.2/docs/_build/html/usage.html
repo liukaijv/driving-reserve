@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using django-filter &mdash; django-filter 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-filter 0.9.0 documentation" href="index.html" />
+    <link rel="next" title="Filter Reference" href="ref/filters.html" />
+    <link rel="prev" title="Installing django-filter" href="install.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ref/filters.html" title="Filter Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installing django-filter"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">django-filter 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-django-filter">
+<h1>Using django-filter<a class="headerlink" href="#using-django-filter" title="Permalink to this headline">¶</a></h1>
+<p>Django-filter provides a simple way to filter down a queryset based on
+parameters a user provides.  Say we have a <tt class="docutils literal"><span class="pre">Product</span></tt> model and we want to let
+our users filter which products they see on a list page.</p>
+<div class="section" id="the-model">
+<h2>The model<a class="headerlink" href="#the-model" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s start with our model:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Product</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">)</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DecimalField</span><span class="p">()</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+    <span class="n">release_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateField</span><span class="p">()</span>
+    <span class="n">manufacturer</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Manufacturer</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-filter">
+<h2>The filter<a class="headerlink" href="#the-filter" title="Permalink to this headline">¶</a></h2>
+<p>We have a number of fields and we want to let our users filter based on the
+price or the release_date.  We create a <tt class="docutils literal"><span class="pre">FilterSet</span></tt> for this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">django_filters</span>
+
+<span class="k">class</span> <span class="nc">ProductFilter</span><span class="p">(</span><span class="n">django_filters</span><span class="o">.</span><span class="n">FilterSet</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Product</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;price&#39;</span><span class="p">,</span> <span class="s">&#39;release_date&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>As you can see this uses a very similar API to Django&#8217;s <tt class="docutils literal"><span class="pre">ModelForm</span></tt>.  Just
+like with a <tt class="docutils literal"><span class="pre">ModelForm</span></tt> we can also override filters, or add new ones using a
+declarative syntax:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">django_filters</span>
+
+<span class="k">class</span> <span class="nc">ProductFilter</span><span class="p">(</span><span class="n">django_filters</span><span class="o">.</span><span class="n">FilterSet</span><span class="p">):</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">django_filters</span><span class="o">.</span><span class="n">NumberFilter</span><span class="p">(</span><span class="n">lookup_type</span><span class="o">=</span><span class="s">&#39;lt&#39;</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Product</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;price&#39;</span><span class="p">,</span> <span class="s">&#39;release_date&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Filters take a <tt class="docutils literal"><span class="pre">lookup_type</span></tt> argument which specifies what lookup type to
+use with <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/models/querysets/#field-lookups">Django&#8217;s ORM</a>.  So here when a user entered a price it would show all
+Products with a price less than that.</p>
+<p><strong>It&#8217;s quite common to forget to set lookup type for `CharField`s/`TextField`s
+and wonder why search for &#8220;foo&#8221; doesn&#8217;t return result for &#8220;foobar&#8221;. It&#8217;s because
+default lookup type is exact text, but you probably want `icontains` lookup
+field.</strong></p>
+<p>The FilterSet Meta class fields can additionally be set using a Dictionary to
+specify multiple <tt class="docutils literal"><span class="pre">lookup_type</span></tt> filters without significant code duplication:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">django_filters</span>
+
+<span class="k">class</span> <span class="nc">ProductFilter</span><span class="p">(</span><span class="n">django_filters</span><span class="o">.</span><span class="n">FilterSet</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Product</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;price&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;lt&#39;</span><span class="p">,</span> <span class="s">&#39;gt&#39;</span><span class="p">],</span>
+                  <span class="s">&#39;release_date&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;exact&#39;</span><span class="p">],</span>
+                 <span class="p">}</span>
+</pre></div>
+</div>
+<p>The above would generate &#8216;price__lt&#8217;, &#8216;price__gt&#8217; and &#8216;release_date&#8217; filters.
+The filter lookup type keyword &#8216;exact&#8217; is the default and therefore never added
+to a filter name.</p>
+<p>Items in the <tt class="docutils literal"><span class="pre">fields</span></tt> sequence in the <tt class="docutils literal"><span class="pre">Meta</span></tt> class may include
+&#8220;relationship paths&#8221; using Django&#8217;s <tt class="docutils literal"><span class="pre">__</span></tt> syntax to filter on fields on a
+related model:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ProductFilter</span><span class="p">(</span><span class="n">django_filters</span><span class="o">.</span><span class="n">FilterSet</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Product</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;manufacturer__country&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Filters also take any arbitrary keyword arguments which get passed onto the
+<tt class="docutils literal"><span class="pre">django.forms.Field</span></tt> initializer.  These extra keyword arguments get stored
+in <tt class="docutils literal"><span class="pre">Filter.extra</span></tt>, so it&#8217;s possible to override the initializer of a
+<tt class="docutils literal"><span class="pre">FilterSet</span></tt> to add extra ones:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ProductFilter</span><span class="p">(</span><span class="n">django_filters</span><span class="o">.</span><span class="n">FilterSet</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Product</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;manufacturer&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ProductFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="s">&#39;manufacturer&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extra</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span><span class="s">&#39;empty_label&#39;</span><span class="p">:</span> <span class="s">&#39;All Manufacturers&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Like <tt class="docutils literal"><span class="pre">django.contrib.admin.ModelAdmin</span></tt>, it is possible to override
+default filters for all the models fields of the same kind using
+<tt class="docutils literal"><span class="pre">filter_overrides</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ProductFilter</span><span class="p">(</span><span class="n">django_filters</span><span class="o">.</span><span class="n">FilterSet</span><span class="p">):</span>
+    <span class="n">filter_overrides</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">&#39;filter_class&#39;</span><span class="p">:</span> <span class="n">django_filters</span><span class="o">.</span><span class="n">CharFilter</span><span class="p">,</span>
+            <span class="s">&#39;extra&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;lookup_type&#39;</span><span class="p">:</span> <span class="s">&#39;icontains&#39;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Product</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-view">
+<h2>The view<a class="headerlink" href="#the-view" title="Permalink to this headline">¶</a></h2>
+<p>Now we need to write a view:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">product_list</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">ProductFilter</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">,</span> <span class="n">queryset</span><span class="o">=</span><span class="n">Product</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">render_to_response</span><span class="p">(</span><span class="s">&#39;my_app/template.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;filter&#39;</span><span class="p">:</span> <span class="n">f</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>If a queryset argument isn&#8217;t provided then all the items in the default manager
+of the model will be used.</p>
+<p>If you want to access the filtered objects in your views, for example if you
+want to paginate them, you can do that. They are in f.qs</p>
+</div>
+<div class="section" id="the-url-conf">
+<h2>The URL conf<a class="headerlink" href="#the-url-conf" title="Permalink to this headline">¶</a></h2>
+<p>We need a URL pattern to call the view:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">url</span><span class="p">(</span><span class="s">r&#39;^list$&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">product_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-template">
+<h2>The template<a class="headerlink" href="#the-template" title="Permalink to this headline">¶</a></h2>
+<p>And lastly we need a template:</p>
+<div class="highlight-python"><div class="highlight"><pre>{% extends &quot;base.html&quot; %}
+
+{% block content %}
+    &lt;form action=&quot;&quot; method=&quot;get&quot;&gt;
+        {{ filter.form.as_p }}
+        &lt;input type=&quot;submit&quot; /&gt;
+    &lt;/form&gt;
+    {% for obj in filter %}
+        {{ obj.name }} - ${{ obj.price }}&lt;br /&gt;
+    {% endfor %}
+{% endblock %}
+</pre></div>
+</div>
+<p>And that&#8217;s all there is to it!  The <tt class="docutils literal"><span class="pre">form</span></tt> attribute contains a normal
+Django form, and when we iterate over the <tt class="docutils literal"><span class="pre">FilterSet</span></tt> we get the objects in
+the resulting queryset.</p>
+</div>
+<div class="section" id="other-meta-options">
+<h2>Other Meta options<a class="headerlink" href="#other-meta-options" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ordering-using-order-by">
+<h3>Ordering using <tt class="docutils literal"><span class="pre">order_by</span></tt><a class="headerlink" href="#ordering-using-order-by" title="Permalink to this headline">¶</a></h3>
+<p>You can allow the user to control ordering by providing the
+<tt class="docutils literal"><span class="pre">order_by</span></tt> argument in the Filter&#8217;s Meta class.  <tt class="docutils literal"><span class="pre">order_by</span></tt> can be either a
+<tt class="docutils literal"><span class="pre">list</span></tt> or <tt class="docutils literal"><span class="pre">tuple</span></tt> of field names, in which case those are the options, or
+it can be a <tt class="docutils literal"><span class="pre">bool</span></tt> which, if True, indicates that all fields that
+the user can filter on can also be sorted on. An example or ordering using a list:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">django_filters</span>
+
+<span class="k">class</span> <span class="nc">ProductFilter</span><span class="p">(</span><span class="n">django_filters</span><span class="o">.</span><span class="n">FilterSet</span><span class="p">):</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">django_filters</span><span class="o">.</span><span class="n">NumberFilter</span><span class="p">(</span><span class="n">lookup_type</span><span class="o">=</span><span class="s">&#39;lt&#39;</span><span class="p">)</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Product</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;price&#39;</span><span class="p">,</span> <span class="s">&#39;release_date&#39;</span><span class="p">]</span>
+        <span class="n">order_by</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;price&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>If you want to control the display of items in <tt class="docutils literal"><span class="pre">order_by</span></tt>, you can set it to
+a list or tuple of 2-tuples in the format <tt class="docutils literal"><span class="pre">(field_name,</span> <span class="pre">display_name)</span></tt>.
+This lets you override the displayed names for your ordering fields:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">order_by</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;Company Name&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;average_rating&#39;</span><span class="p">,</span> <span class="s">&#39;Stars&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the default query parameter name used for ordering is <tt class="docutils literal"><span class="pre">o</span></tt>.  You
+can override this by setting an <tt class="docutils literal"><span class="pre">order_by_field</span></tt> attribute on the
+<tt class="docutils literal"><span class="pre">FilterSet</span></tt> class to the string value you would like to use.</p>
+</div>
+<div class="section" id="custom-forms-using-form">
+<h3>Custom Forms using <tt class="docutils literal"><span class="pre">form</span></tt><a class="headerlink" href="#custom-forms-using-form" title="Permalink to this headline">¶</a></h3>
+<p>The inner <tt class="docutils literal"><span class="pre">Meta</span></tt> class also takes an optional <tt class="docutils literal"><span class="pre">form</span></tt> argument.  This is a
+form class from which <tt class="docutils literal"><span class="pre">FilterSet.form</span></tt> will subclass.  This works similar to
+the <tt class="docutils literal"><span class="pre">form</span></tt> option on a <tt class="docutils literal"><span class="pre">ModelAdmin.</span></tt></p>
+</div>
+</div>
+<div class="section" id="non-meta-options">
+<h2>Non-Meta options<a class="headerlink" href="#non-meta-options" title="Permalink to this headline">¶</a></h2>
+<p>Note that these options do not go in the Meta class, they are specified directly
+in your FilterSet class.</p>
+<div class="section" id="strict">
+<h3><tt class="docutils literal"><span class="pre">strict</span></tt><a class="headerlink" href="#strict" title="Permalink to this headline">¶</a></h3>
+<p>The <tt class="docutils literal"><span class="pre">strict</span></tt> option controls whether results are returned when an invalid
+value is specified by the user for any filter field. By default, <tt class="docutils literal"><span class="pre">strict</span></tt> is
+set to <tt class="docutils literal"><span class="pre">True</span></tt> meaning that an empty queryset is returned if any field contains
+an invalid value. You can loosen this behavior by setting <tt class="docutils literal"><span class="pre">strict</span></tt> to
+<tt class="docutils literal"><span class="pre">False</span></tt> which will effectively ignore a filter field if its value is invalid.</p>
+</div>
+</div>
+<div class="section" id="overriding-filterset-methods">
+<h2>Overriding <tt class="docutils literal"><span class="pre">FilterSet</span></tt> methods<a class="headerlink" href="#overriding-filterset-methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="get-ordering-field">
+<h3><tt class="docutils literal"><span class="pre">get_ordering_field()</span></tt><a class="headerlink" href="#get-ordering-field" title="Permalink to this headline">¶</a></h3>
+<p>If you want to use a custom widget, or in any other way override the ordering
+field you can override the <tt class="docutils literal"><span class="pre">get_ordering_field()</span></tt> method on a <tt class="docutils literal"><span class="pre">FilterSet</span></tt>.
+This method just needs to return a Form Field.</p>
+<p>Ordering on multiple fields, or other complex orderings can be achieved by
+overriding the <tt class="docutils literal"><span class="pre">Filterset.get_order_by()</span></tt> method. This is passed the selected
+<tt class="docutils literal"><span class="pre">order_by</span></tt> value, and is expected to return an iterable of values to pass to
+<tt class="docutils literal"><span class="pre">QuerySet.order_by</span></tt>. For example, to sort a <tt class="docutils literal"><span class="pre">User</span></tt> table by last name, then
+first name:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UserFilter</span><span class="p">(</span><span class="n">django_filters</span><span class="o">.</span><span class="n">FilterSet</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">order_by</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s">&#39;username&#39;</span><span class="p">,</span> <span class="s">&#39;Username&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">&#39;last_name&#39;</span><span class="p">,</span> <span class="s">&#39;Last Name&#39;</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_order_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order_value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">order_value</span> <span class="o">==</span> <span class="s">&#39;last_name&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s">&#39;last_name&#39;</span><span class="p">,</span> <span class="s">&#39;first_name&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserFilter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_order_by</span><span class="p">(</span><span class="n">order_value</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="generic-view">
+<h2>Generic View<a class="headerlink" href="#generic-view" title="Permalink to this headline">¶</a></h2>
+<p>In addition to the above usage there is also a class-based generic view
+included in django-filter, which lives at <tt class="docutils literal"><span class="pre">django_filters.views.FilterView</span></tt>.
+You must provide either a <tt class="docutils literal"><span class="pre">model</span></tt> or <tt class="docutils literal"><span class="pre">filterset_class</span></tt> argument, similar to
+<tt class="docutils literal"><span class="pre">ListView</span></tt> in Django itself:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># urls.py</span>
+<span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">url</span>
+<span class="kn">from</span> <span class="nn">django_filters.views</span> <span class="kn">import</span> <span class="n">FilterView</span>
+<span class="kn">from</span> <span class="nn">myapp.models</span> <span class="kn">import</span> <span class="n">Product</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">r&#39;^list/$&#39;</span><span class="p">,</span> <span class="n">FilterView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">Product</span><span class="p">)),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>You must provide a template at <tt class="docutils literal"><span class="pre">&lt;app&gt;/&lt;model&gt;_filter.html</span></tt> which gets the
+context parameter <tt class="docutils literal"><span class="pre">filter</span></tt>.  Additionally, the context will contain
+<tt class="docutils literal"><span class="pre">object_list</span></tt> which holds the filtered queryset.</p>
+<p>A legacy functional generic view is still included in django-filter, although
+its use is deprecated.  It can be found at
+<tt class="docutils literal"><span class="pre">django_filters.views.object_filter</span></tt>.  You must provide the same arguments
+to it as the class based view:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># urls.py</span>
+<span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">patterns</span><span class="p">,</span> <span class="n">url</span>
+<span class="kn">from</span> <span class="nn">myapp.models</span> <span class="kn">import</span> <span class="n">Product</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s">r&#39;^list/$&#39;</span><span class="p">,</span> <span class="s">&#39;django_filters.views.object_filter&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;model&#39;</span><span class="p">:</span> <span class="n">Product</span><span class="p">}),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The needed template and its context variables will also be the same as the
+class-based view above.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using django-filter</a><ul>
+<li><a class="reference internal" href="#the-model">The model</a></li>
+<li><a class="reference internal" href="#the-filter">The filter</a></li>
+<li><a class="reference internal" href="#the-view">The view</a></li>
+<li><a class="reference internal" href="#the-url-conf">The URL conf</a></li>
+<li><a class="reference internal" href="#the-template">The template</a></li>
+<li><a class="reference internal" href="#other-meta-options">Other Meta options</a><ul>
+<li><a class="reference internal" href="#ordering-using-order-by">Ordering using <tt class="docutils literal"><span class="pre">order_by</span></tt></a></li>
+<li><a class="reference internal" href="#custom-forms-using-form">Custom Forms using <tt class="docutils literal"><span class="pre">form</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#non-meta-options">Non-Meta options</a><ul>
+<li><a class="reference internal" href="#strict"><tt class="docutils literal"><span class="pre">strict</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#overriding-filterset-methods">Overriding <tt class="docutils literal"><span class="pre">FilterSet</span></tt> methods</a><ul>
+<li><a class="reference internal" href="#get-ordering-field"><tt class="docutils literal"><span class="pre">get_ordering_field()</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#generic-view">Generic View</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">Installing django-filter</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ref/filters.html"
+                        title="next chapter">Filter Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/usage.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ref/filters.html" title="Filter Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installing django-filter"
+             >previous</a> |</li>
+        <li><a href="index.html">django-filter 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Alex Gaynor and others..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

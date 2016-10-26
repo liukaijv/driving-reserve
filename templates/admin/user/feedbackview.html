@@ -1,0 +1,155 @@
+{% extends "admin/_base.html" %}
+{% block title %}查看反馈信息{% endblock %}
+{% load config_tags %}
+{% block content %}
+    <div class="container-fluid paper-wrap bevel tlbr">
+        <!-- CONTENT -->
+        <!--TITLE -->
+        <div class="row">
+            <div id="paper-top">
+                <div class="col-sm-3">
+                    <h2 class="tittle-content-header">
+                        <i class="icon-media-record"></i>
+                        <span>查看反馈信息</span>
+                    </h2>
+                </div>
+                <div class="col-sm-7">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="tittle-middle-header">
+                        <div class="alert">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ TITLE -->
+        <!-- BREADCRUMB -->
+        <ul id="breadcrumb">
+            <li>
+                <span class="entypo-home"></span>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="" title="系统管理">系统管理</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'list_feedback_url' %}" title="反馈列表">反馈列表</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="查看反馈信息">查看反馈信息</a>
+            </li>
+        </ul>
+        <!-- END OF BREADCRUMB -->
+        <div class="content-wrap">
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <!-- BLANK PAGE-->
+                    <div class="nest">
+                        <div class="title-alt">
+                            <h6>基本信息</h6>
+
+                            <div class="titleToggle">
+                                <a class="nav-toggle-alt" href="#horizontal1">
+                                    <span class="entypo-up-open"></span>
+                                </a>
+                            </div>
+
+                        </div>
+                        <div class="body-nest" id="horizontal1">
+                            <form method="post">
+                                {% csrf_token %}
+                                <table class="user-view-table">
+                                    <tr>
+                                        <th>学员姓名：</th>
+                                        <td>{{ object.user.name }}</td>
+                                        <th>联系方式：</th>
+                                        <td>{{ object.mobile }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>反馈时间：</th>
+                                        <td colspan="3">{{ object.create_time|date:"Y-m-d H:i" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>反馈内容：</th>
+                                        <td colspan="3">{{ object.description }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>处理意见：</th>
+                                        <td colspan="3">
+                                            {% if object.audit_status == 0 %}
+                                                <textarea class="col-lg-8" name="remarks"></textarea>
+                                            {% else %}
+                                                {{ object.remarks }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center" colspan="4">
+                                            {% if object.audit_status == 0 %}
+                                                <button class="btn btn-success" type="submit">保存
+                                                </button>
+                                            {% endif %}
+                                            <a class="btn btn-cancel ajax-load"
+                                               href="{% url 'list_feedback_url' %}">返回</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- END OF BLANK PAGE -->
+                </div>
+            </div>
+
+            <!-- /END OF CONTENT -->
+            {% include 'admin/_foot.html' %}
+        </div>
+    </div>
+    <style>
+        .user-view-table {
+            width: 100%;
+        }
+
+        .user-view-table th,
+        .user-view-table td {
+            padding: 10px !important;
+            border: 1px solid #eee !important;
+        }
+
+        .user-view-table th {
+            background: #f9f9f9;
+            font-weight: normal;
+        }
+
+        .user-view-table td {
+            color: #666;
+        }
+
+        .form-block {
+            padding: 30px 20px 0;
+            width: 70%;
+        }
+
+        .form-block .control-label {
+            font-weight: normal;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+    </style>
+{% endblock %}

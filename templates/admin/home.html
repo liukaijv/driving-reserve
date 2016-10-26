@@ -1,0 +1,105 @@
+{% extends "admin/_base.html" %}
+{% load staticfiles %}
+{% block title %}森安驾校后台管理{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/social.css' %}">
+{% endblock %}
+{% block content %}
+
+    <div class="container-fluid paper-wrap bevel tlbr">
+        <!-- CONTENT -->
+        <!--TITLE -->
+        <div class="row">
+            <div id="paper-top">
+                <div class="col-sm-3">
+                    <h2 class="tittle-content-header">
+                        <i class="icon-feed"></i>
+                            <span>主页
+                            </span>
+                    </h2>
+
+                </div>
+
+                <div class="col-sm-7">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="tittle-middle-header">
+                        <div class="alert">
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!--/ TITLE -->
+
+        <div class="social-wrap">
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="panel panel-default">
+                        <div class="panel-facebook">
+                            <span class="middle-social">预约审核</span>
+                        </div>
+                        <div class="panel-body">
+                            <p class="lead">今天预约人数：<span class="text-danger">{{ audit.all_reserve_count }}</span> 人</p>
+
+                            <p class="lead">已审核人数：<span class="text-danger">{{ audit.check_reserve_count }}</span> 人</p>
+
+                            <p class="lead">未审核人数：<span class="text-danger">{{ audit.uncheck_reserve_count }}</span> 人</p>
+
+                            <p class="lead">科目二学车人数：<span class="text-danger">{{ audit.subject_two_reserve_count }}</span> 人</p>
+
+                            <p class="lead">科目三学车人数：<span class="text-danger">{{ audit.subject_three_reserve_count }}</span> 人 </p>
+                        </div>
+                    </div>
+                </div>
+                <!--/col-->
+
+                <div class="col-sm-4">
+                    <div class="panel panel-default">
+                        <div class="panel-twitter">
+                            <span class="middle-social">学车情况</span>
+                        </div>
+                        <div class="panel-body">
+                            <p class="lead">今天学车人数：<span class="text-danger">{{ status.today_drive_count }}</span> 人</p>
+
+                            <p class="lead">实际学车人数：<span class="text-danger">{{ status.today_arrive_drive_count }}</span> 人</p>
+
+                            <p class="lead">未学车人数：<span class="text-danger">{{ status.today_not_arrive_drive_count }}</span> 人</p>
+
+                        </div>
+                    </div>
+                </div>
+                <!--/col-->
+
+                <div class="col-sm-4">
+                    <div class="panel panel-default">
+                        <div class="panel-instagram" id="b02">
+                            <span class="middle-social">学员概况</span>
+                        </div>
+                        <div class="panel-body">
+                            <p class="lead">今天新增学员：<span class="text-danger">{{ number.today_add_user_count }}</span> 人</p>
+
+                            <p class="lead">总学员人数：<span class="text-danger">{{ number.all_user_count }}</span> 人 </p>
+
+                            <p class="lead">科目一人数：<span class="text-danger">{{ number.stage_one_user_count }}</span> 人 </p>
+
+                            <p class="lead">科目二人数：<span class="text-danger">{{ number.stage_two_user_count }}</span> 人 </p>
+
+                            <p class="lead">科目三人数：<span class="text-danger">{{ number.stage_three_user_count }}</span> 人 </p>
+                        </div>
+                    </div>
+                </div>
+                <!--/col-->
+
+            </div>
+
+        </div>
+
+        <!-- /END OF CONTENT -->
+
+    </div>
+
+{% endblock %}

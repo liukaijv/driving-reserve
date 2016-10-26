@@ -1,0 +1,127 @@
+{% extends "admin/_base.html" %}
+{% load pagination_tags %}
+{% block title %}用户反馈列表{% endblock %}
+
+{% block content %}
+    <div class="container-fluid paper-wrap bevel tlbr">
+        <!-- CONTENT -->
+        <!--TITLE -->
+        <div class="row">
+            <div id="paper-top">
+                <div class="col-sm-3">
+                    <h2 class="tittle-content-header">
+                        <i class="icon-media-record"></i>
+                        <span>用户反馈列表</span>
+                    </h2>
+                </div>
+                <div class="col-sm-7">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="tittle-middle-header">
+                        <div class="alert">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--/ TITLE -->
+        <!-- BREADCRUMB -->
+        <ul id="breadcrumb">
+            <li>
+                <span class="entypo-home"></span>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="系统管理">系统管理</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="用户反馈">用户反馈</a>
+            </li>
+            <li class="pull-right">
+                <form class="search-form form-inline clearfix" action="{% url 'list_category_url' %}" method="get">
+                    <div class="input-widget">
+                        {% for obj in filter.form %}
+                            {{ obj }}
+                        {% endfor %}
+                        <input class="hidden" type="submit">
+                    </div>
+                </form>
+            </li>
+        </ul>
+        <!-- END OF BREADCRUMB -->
+        <div class="content-wrap">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- BLANK PAGE-->
+                    <div class="nest" id="tableStaticClose">
+                        <div class="body-nest" id="tableStatic">
+                            <section id="flip-scroll">
+                                <table class="table table-bordered table-striped cf">
+                                    <thead class="cf">
+
+                                    <tr>
+                                        <th class="text-center">
+                                            <input type="checkbox" data-target="#checked-ids" data-role="check-all"
+                                                   data-classname="check-id">
+                                        </th>
+                                        <th>学员姓名</th>
+                                        <th>学员电话</th>
+                                        <th>反馈信息</th>
+                                        <th>反馈时间</th>
+                                        <th>处理状态</th>
+                                        <th class="text-center">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% autopaginate feedback_list 15 %}
+                                    {% for item in feedback_list %}
+                                        <tr>
+                                            <td class="text-center">
+                                                <input type="checkbox" name="id[]" class="check-id"
+                                                       value="{{ item.id }}">
+                                            </td>
+                                            <td>{{ item.user.name }}</td>
+                                            <td>{{ item.mobile }}</td>
+                                            <td>{{ item.description| slice:":20"}}{% if item.description|length|get_digit:"-1" > 20 %}...{% endif %}
+                                            </td>
+                                            <td>{{ item.create_time|date:"Y-m-d H:i" }}</td>
+                                            <td>{{ item.get_audit_status_display|safe}}</td>
+                                            <td class="text-center">
+                                                <a href="{% url 'details_feedback_url' item.id %}"
+                                                   class="btn btn-primary ajax-load">
+                                                    <span class="entypo-search"></span>&nbsp;&nbsp;查看
+                                                </a>
+                                                <a href="{% url 'delete_feedback_url' item.id %}" class="btn btn-info del-item">
+                                                <span class="entypo-trash"></span>&nbsp;&nbsp;删除
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+
+                                <input type="hidden" id="checked-ids">
+                                {% paginate %}
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <!-- END OF BLANK PAGE -->
+            </div>
+            <!-- /END OF CONTENT -->
+            {% include 'admin/_foot.html' %}
+        </div>
+    </div>
+{% endblock%}
+
+
+
+
+
+
+

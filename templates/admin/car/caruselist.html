@@ -1,0 +1,172 @@
+{% extends "admin/_base.html" %}
+{% block title %}教练车列表{% endblock %}
+{% block content %}
+    <div class="container-fluid paper-wrap bevel tlbr">
+        <!-- CONTENT -->
+        <!--TITLE -->
+        <div class="row">
+            <div id="paper-top">
+                <div class="col-sm-3">
+                    <h2 class="tittle-content-header">
+                        <i class="icon-media-record"></i>
+                        <span>车辆使用情况</span>
+                    </h2>
+                </div>
+                <div class="col-sm-7">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="tittle-middle-header">
+                        <div class="alert">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="devider-vertical visible-lg"></div>
+                    <div class="btn-group btn-wigdet pull-right visible-lg">
+                        <div class="btn" data-toggle="dropdown">操作</div>
+                        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul role="menu" class="dropdown-menu">
+                            <li>
+                                <a href="{% url 'add_caruse_url' coach_car.id %}" >
+                                    <span class="entypo-plus-circled margin-iconic"></span>新建禁用时间</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ TITLE -->
+        <!-- BREADCRUMB -->
+        <ul id="breadcrumb">
+            <li>
+                <span class="entypo-home"></span>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'list_car_url' %}" title="车辆管理">车辆管理</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="{% url 'list_car_url' %}" title="车辆管理">车辆列表</a>
+            </li>
+            <li>
+                <i class="fa fa-lg fa-angle-right"></i>
+            </li>
+            <li>
+                <a href="#" title="车辆禁用">车辆禁用</a>
+            </li>
+            <li class="pull-right">
+            </li>
+        </ul>
+        <!-- END OF BREADCRUMB -->
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="nest" id="smsClose">
+                        <div class="title-alt">
+                            <h6>车辆信息</h6>
+
+                            <div class="titleToggle">
+                                <a class="nav-toggle-alt" href="#sms">
+                                    <span class="entypo-up-open"></span>
+                                </a>
+                            </div>
+
+                        </div>
+
+                        <div class="body-nest" id="sms">
+
+                            <div class="form_center">
+
+
+                                <div class="form-group">
+                                    <label class="col-lg-2 col-sm-2 control-label">车牌号：</label>
+
+                                    <div class="col-lg-4">
+                                        <p class="form-control-static">
+                                            {{ coach_car.license }}
+                                        </p>
+
+                                    </div>
+
+                                    <label class="col-lg-2 col-sm-2 control-label">车辆类型：</label>
+
+                                    <div class="col-lg-4">
+                                        <p class="form-control-static">
+                                            {{ coach_car.train_type }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-2 col-sm-2 control-label">车辆种类：</label>
+
+                                    <div class="col-lg-4">
+                                        <p class="form-control-static">
+                                            {{ coach_car.get_car_type_display }}
+                                        </p>
+                                    </div>
+
+                                    <label class="col-lg-2 col-sm-2 control-label">训练场地：</label>
+
+                                    <div class="col-lg-4">
+                                        <p class="form-control-static">
+                                            {{ coach_car.training_place }}
+                                        </p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- BLANK PAGE-->
+                    <div class="nest" id="tableStaticClose">
+                        <div class="body-nest" id="tableStatic">
+                            <section id="flip-scroll">
+                                <table class="table table-bordered table-striped cf">
+                                    <thead class="cf">
+                                    <tr>
+                                        <th>禁用开始时间</th>
+                                        <th>禁用结束时间</th>
+                                        <th class="text-center">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in caruse_list %}
+                                        <tr>
+                                            <td>{{ item.begin_datetime | date:"Y-m-d H:i" }}</td>
+                                            <td>{{ item.end_datetime | date:"Y-m-d H:i"}}</td>
+                                            <td class="text-center">
+                                                <a href="{% url 'delete_caruse_url' item.id %}" type="button" class="btn btn-info del-item">
+                                                    <span class="entypo-trash"></span>&nbsp;&nbsp;删除
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <!-- END OF BLANK PAGE -->
+            </div>
+            <!-- /END OF CONTENT -->
+            {% include 'admin/_foot.html' %}
+        </div>
+    </div>
+{% endblock %}

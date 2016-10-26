@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Widget Reference &mdash; django-filter 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="django-filter 0.9.0 documentation" href="../index.html" />
+    <link rel="next" title="Running the django-filter tests" href="../tests.html" />
+    <link rel="prev" title="Filter Reference" href="filters.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../tests.html" title="Running the django-filter tests"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="filters.html" title="Filter Reference"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">django-filter 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="widget-reference">
+<h1>Widget Reference<a class="headerlink" href="#widget-reference" title="Permalink to this headline">¶</a></h1>
+<p>This is a reference document with a list of the provided widgets and their
+arguments.</p>
+<div class="section" id="linkwidget">
+<h2><tt class="docutils literal"><span class="pre">LinkWidget</span></tt><a class="headerlink" href="#linkwidget" title="Permalink to this headline">¶</a></h2>
+<p>This widget renders each option as a link, instead of an actual &lt;input&gt;.  It has
+one method that you can overide for additional customizability.
+<tt class="docutils literal"><span class="pre">option_string()</span></tt> should return a string with 3 Python keyword argument
+placeholders:</p>
+<ol class="arabic simple">
+<li><tt class="docutils literal"><span class="pre">attrs</span></tt>: This is a string with all the attributes that will be on the
+final <tt class="docutils literal"><span class="pre">&lt;a&gt;</span></tt> tag.</li>
+<li><tt class="docutils literal"><span class="pre">query_string</span></tt>: This is the query string for use in the <tt class="docutils literal"><span class="pre">href</span></tt>
+option on the <tt class="docutils literal"><span class="pre">&lt;a&gt;</span></tt> elemeent.</li>
+<li><tt class="docutils literal"><span class="pre">label</span></tt>: This is the text to be displayed to the user.</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Widget Reference</a><ul>
+<li><a class="reference internal" href="#linkwidget"><tt class="docutils literal"><span class="pre">LinkWidget</span></tt></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="filters.html"
+                        title="previous chapter">Filter Reference</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../tests.html"
+                        title="next chapter">Running the django-filter tests</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/ref/widgets.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../tests.html" title="Running the django-filter tests"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="filters.html" title="Filter Reference"
+             >previous</a> |</li>
+        <li><a href="../index.html">django-filter 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Alex Gaynor and others..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

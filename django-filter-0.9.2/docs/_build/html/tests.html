@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Running the django-filter tests &mdash; django-filter 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="django-filter 0.9.0 documentation" href="index.html" />
+    <link rel="prev" title="Widget Reference" href="ref/widgets.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="ref/widgets.html" title="Widget Reference"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">django-filter 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="running-the-django-filter-tests">
+<h1>Running the django-filter tests<a class="headerlink" href="#running-the-django-filter-tests" title="Permalink to this headline">¶</a></h1>
+<p>The easiest way to run the django-filter tests is to check out the source
+code into a virtualenv, where you can install the test dependencies.
+django-filter uses a custom test runner to locate all of the tests, so a
+wrapper script is available to set up and run the test suite.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The following assumes you have <a class="reference external" href="http://www.virtualenv.org">virtualenv</a> and <a class="reference external" href="http://git-scm.com">git</a> installed.</p>
+</div>
+<div class="section" id="set-up-a-virtualenv-for-the-test-suite">
+<h2>Set up a virtualenv for the test suite<a class="headerlink" href="#set-up-a-virtualenv-for-the-test-suite" title="Permalink to this headline">¶</a></h2>
+<p>Run the following to create a new virtualenv to run the test suite in:</p>
+<div class="highlight-python"><div class="highlight"><pre>virtualenv django-filter-tests
+cd django-filter-tests
+. bin/activate
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-a-copy-of-django-filter">
+<h2>Get a copy of django-filter<a class="headerlink" href="#get-a-copy-of-django-filter" title="Permalink to this headline">¶</a></h2>
+<p>Get the django-filter source code using the following command:</p>
+<div class="highlight-python"><div class="highlight"><pre>git clone https://github.com/alex/django-filter.git
+</pre></div>
+</div>
+<p>Switch to the django-filter directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>cd django-filter
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-the-test-dependencies">
+<h2>Install the test dependencies<a class="headerlink" href="#install-the-test-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>Run the following to install the test dependencies within the
+virutalenv:</p>
+<div class="highlight-python"><div class="highlight"><pre>pip install -r requirements/test.txt
+</pre></div>
+</div>
+<p>Run the django-filter tests:</p>
+<div class="highlight-python"><div class="highlight"><pre>python runtests.py
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Running the django-filter tests</a><ul>
+<li><a class="reference internal" href="#set-up-a-virtualenv-for-the-test-suite">Set up a virtualenv for the test suite</a></li>
+<li><a class="reference internal" href="#get-a-copy-of-django-filter">Get a copy of django-filter</a></li>
+<li><a class="reference internal" href="#install-the-test-dependencies">Install the test dependencies</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ref/widgets.html"
+                        title="previous chapter">Widget Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tests.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="ref/widgets.html" title="Widget Reference"
+             >previous</a> |</li>
+        <li><a href="index.html">django-filter 0.9.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Alex Gaynor and others..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

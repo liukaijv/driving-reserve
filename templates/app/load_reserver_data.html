@@ -1,0 +1,88 @@
+<div class="reverse-wrapper tabs">
+    <div class="reverse-header">
+        <ul class="tabs-nav">
+            {% for key_outer,val_outer in reserver_list.items %}
+                <li>
+                    <span>{{ val_outer.each_day|date:"D"|cut:"星期" }}</span><br>
+                    <a href="#panel-{{ key_outer }}">{{ val_outer.each_day | date:"d" }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="reverse-content" style="margin-top: 44px">
+        <div class="tabs-content">
+            {% for key_outer,val_outer in reserver_list.items %}
+                <div class="reverse-panel tabs-panel" id="panel-{{ key_outer }}">
+                    <div class="list-block">
+                        <ul>
+                            {% for val in val_outer.time_frame %}
+                                <li class="{% if val.status == False %}disable-tip{% endif %}"
+                                    data-msg="{{ val.status_msg }}">
+                                    <input type="hidden" name="train_date"
+                                           value="{{ val_outer.each_day | date:"Y-m-d" }}">
+                                    <label class="label-checkbox item-content">
+                                        <input type="radio" name="train_time_span"
+                                               {% if val.status == False %}disabled{% endif %}
+                                               value="{{ val.id }}">
+
+                                        <div class="item-media"><i class="icon icon-form-checkbox"></i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <span class="color-gray">({{ val.name }})</span>
+                                                {{ val.start_time | date:"H:i" }}-{{ val.end_time | date:"H:i" }}
+                                            </div>
+                                            <div class="item-after">
+                                                {% if val.status == False %}
+                                                    <span class="badge bg-gray">不可预约</span>{% else %}
+                                                    <span class="badge bg-blue">可以预约</span>{% endif %}
+                                            </div>
+                                        </div>
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+<input type="hidden" name="current_page" value="{{ current_page }}">
+<input type="hidden" name="total_page" value="{{ total_page }}">
+
+<script>
+    $(function () {
+
+        $('.tabs').tabs();
+
+        var hammer = new Hammer($('.reverse-header').get(0));
+        var current_page = parseInt($('[name="current_page"]').val());
+        var total_page = parseInt($('[name="total_page"]').val());
+        hammer.get('pan').set({
+            direction: Hammer.DIRECTION_HORIZONTAL,
+            threshold: 50
+        });
+        hammer.on('swiperight', $.debounce(function (e) {
+            e.preventDefault();
+            if (current_page == 1) {
+                App.alert("已经到最小可预约日期了");
+                return;
+            }
+            $('.reverse-data-block').load('/app/load_reserver_data/?page=' + (current_page - 1));
+
+        }, 50));
+        hammer.on('swipeleft', $.debounce(function (e) {
+            e.preventDefault();
+            if (current_page == total_page) {
+                App.alert("已经到最大可预约日期了");
+                return;
+            }
+            $('.reverse-data-block').load('/app/load_reserver_data/?page=' + (current_page + 1));
+        }, 50));
+
+    });
+</script>
